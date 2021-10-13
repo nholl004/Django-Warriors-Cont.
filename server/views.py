@@ -4,6 +4,29 @@ from django.http import HttpResponse
 from .forms import serverForm
 from .models import search
 # Create your views here.
+
+import csv
+
+caseList = []
+with open('covid_19_data.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        case = {
+            "SNo": row[0],
+            "observ":row[1],
+            "state":row[2],
+            "country":row[3],
+            "lastUp":row[4],
+            "confirm":row[5],
+            "deaths":row[6],
+            "recovered":row[7]
+        }
+        caseList.append(case)
+        line_count += 1
+    #print(f'Processed {line_count} lines.')
+    #print(caseList[306429])
+
 def search(request):
     searched_data = request.POST.get('search')
     print(searched_data)
