@@ -6,6 +6,10 @@
 </form>
 
 <h1>{{searched}}</h1>
-{% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
-    <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
-{% endfor %}
+{% if error%}
+    <p>Error: incorrect info added try...</p>
+{% else %}
+    {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
+        <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
+    {% endfor %}
+{% endif %}

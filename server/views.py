@@ -54,14 +54,17 @@ def search(request):
 
     #print(len(data_info))
     if (len(data_info) < 2):
-        data_info[0].append("Your search was not found try again...")
+        error = True
+        return render(request,'server_view/search.html', {'searched':searched_data, 
+        'error':error})
         #print(data_info)
     else:
+        error = False
         data_info.pop(0)
+        return render(request,'server_view/search.html', {'searched':searched_data,
+        'data_info':data_info,'error':error})
         #print(data_info)
 
-    return render(request,'server_view/search.html', {'searched':searched_data,
-    'data_info':data_info})
 
 # def searched(request):
 #     queryset = search.objects.all()
