@@ -5,4 +5,7 @@
     <button type="submit">Search</button>
 </form>
 
-<h1>{{search}}</h1>
+<h1>{{searched}}</h1>
+{% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
+    <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
+{% endfor %}

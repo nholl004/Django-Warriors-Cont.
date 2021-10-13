@@ -19,9 +19,9 @@ from server import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.test),
-    path('test1/',views.test1),
-    path('searching/', views.searching),
-    path('searched/', views.searched),
+    # path('',views.test),
+    # path('test1/',views.test1),
+    # path('searching/', views.searching),
+    # path('searched/', views.searched),
     path('search',views.search),
 ]
