@@ -1,0 +1,8 @@
+<h1>Search Data</h1>
+
+<form method='POST'> {% csrf_token %}
+    Search: <input type="text" name="search">
+    <button type="submit">Search</button>
+</form>
+
+<h1>{{search}}</h1>
