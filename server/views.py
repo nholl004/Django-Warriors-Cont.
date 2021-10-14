@@ -10,6 +10,7 @@ import csv
 caseList = [[]]
 infoList = []
 line_count = 0
+
 with open('covid_19_data.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     for row in csv_reader:
@@ -38,19 +39,18 @@ with open('covid_19_data.csv') as csv_file:
 #print(f'Processed {line_count} lines.')#count = 306430
 #print(caseList[1][2])#[1-306429][0-7]
 
-
 def search(request):
     searched_data = request.POST.get('search')
     print(searched_data)
     x = 0
-    
     data_info = [[]]
     print(data_info)
-    while( x != line_count-1):
-        x += 1
-        for y in range(8):
-            if(caseList[x][y] == searched_data):
-                data_info.append(caseList[x])
+    if (searched_data != ''):
+        while( x != line_count-1):
+            x += 1
+            for y in range(8):
+                if(caseList[x][y][0:5] == searched_data or caseList[x][y].lower() == searched_data.lower()):
+                    data_info.append(caseList[x])
 
     #print(len(data_info))
     if (len(data_info) < 2):
