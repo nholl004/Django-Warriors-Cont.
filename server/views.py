@@ -1,3 +1,4 @@
+from types import NoneType
 from django.shortcuts import render
 from django.http import HttpResponse
 
@@ -45,7 +46,7 @@ def search(request):
     x = 0
     data_info = [[]]
     print(data_info)
-    if (searched_data != ''):
+    if (searched_data != None):
         while( x != line_count-1):
             x += 1
             for y in range(8):
