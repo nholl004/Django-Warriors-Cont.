@@ -1,9 +1,30 @@
 <h1>Search Data</h1>
 
 <form method='POST'> {% csrf_token %}
-    Search: <input type="text" name="search">
+    Search: <input type="text" name="searched" id="search_bar" placeholder = "Choose example format">
+    <select id="guide_format" onChange = "change()">
+        <option value='' disabled selected>Select your Format</option>
+        <option value="#">SNo</option>
+        <option value="MM/DD/YYYY">Observation Date</option>
+        <option value="Example: New York">Province/State</option>
+        <option value="Example: United States">Country</option>
+        <option value="MM/DD/YYYY HH:MM">Last Updated</option>
+        <option value="#">Confirmed</option>
+        <option value="#">Deaths</option>
+        <option value="#">Recovered</option>
+    </select>
     <button type="submit">Search</button>
 </form>
+
+<script type = "text/javascript">
+    function change() {
+        var select = document.getElementById('guide_format');
+        var option = select.options[select.selectedIndex];
+
+        document.getElementById('search_bar').placeholder = option.value;
+    }
+</script>
+
 
 <h1>{{searched}}</h1>
 {% if error%}
