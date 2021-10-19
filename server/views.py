@@ -6,39 +6,44 @@ from .forms import serverForm
 from .models import search
 # Create your views here.
 
-import csv
-
 caseList = [[]]
-infoList = []
 line_count = 0
 
-with open('covid_19_data.csv') as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',')
-    for row in csv_reader:
-        infoList.append(row[0])
-        infoList.append(row[1])
-        infoList.append(row[2])
-        infoList.append(row[3])
-        infoList.append(row[4])
-        infoList.append(row[5])
-        infoList.append(row[6])
-        infoList.append(row[7])
-        caseList.append(infoList)
-        infoList = []
-        #case = {
-        #    "SNo": row[0],
-        #    "observ":row[1],
-        #    "state":row[2],
-        #    "country":row[3],
-        #    "lastUp":row[4],
-        #    "confirm":row[5],
-        #    "deaths":row[6],
-        #    "recovered":row[7]
-        #}
-        #caseList.append(case)
-        line_count += 1
-#print(f'Processed {line_count} lines.')#count = 306430
-#print(caseList[1][2])#[1-306429][0-7]
+csv_file = open("covid_19_data.csv")
+for line in csv_file:
+    infoList = []
+    infoList = line.split(',')
+    caseList.append(infoList)
+    # print(infoList)
+    line_count += 1
+
+# with open('covid_19_data.csv') as csv_file:
+#     csv_reader = csv.reader(csv_file, delimiter=',')
+#     for row in csv_reader:
+#         infoList.append(row[0])
+#         infoList.append(row[1])
+#         infoList.append(row[2])
+#         infoList.append(row[3])
+#         infoList.append(row[4])
+#         infoList.append(row[5])
+#         infoList.append(row[6])
+#         infoList.append(row[7])
+#         caseList.append(infoList)
+#         infoList = []
+#         #case = {
+#         #    "SNo": row[0],
+#         #    "observ":row[1],
+#         #    "state":row[2],
+#         #    "country":row[3],
+#         #    "lastUp":row[4],
+#         #    "confirm":row[5],
+#         #    "deaths":row[6],
+#         #    "recovered":row[7]
+#         #}
+#         #caseList.append(case)
+#         line_count += 1
+# #print(f'Processed {line_count} lines.')#count = 306430
+# #print(caseList[1][2])#[1-306429][0-7]
 
 def search(request):
     searched_data = request.POST.get('search')
