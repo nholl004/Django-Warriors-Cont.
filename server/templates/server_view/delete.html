@@ -1,16 +1,11 @@
-<h1>Search Data</h1>
+<h1>Deleting Data</h1>
 
 <form method='POST'> {% csrf_token %}
-    Search: <input type="text" name="search">
-    <button type="submit">Search</button>
+    <p>Enter index of desired deleted data:</p>
+     <input type="text" name="index">
+    <button type="submit">Submit</button>
 </form>
-
-<form method='POST'> {% csrf_token %}
-    <button type="submit">Delete</button>
-    <button type="submit">Insert</button>
-    <p>To remove data select "Delete" button. To add data select "Insert" button.</p>
-</form>
-
+<p>{{del_data}}</p>
 {% if error%}
     <p>Error: Incorrect info added, please try again!</p>
 {% else %}
