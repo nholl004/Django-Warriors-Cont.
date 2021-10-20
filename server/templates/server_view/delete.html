@@ -1,15 +1,9 @@
 <h1>Deleting Data</h1>
 
 <form method='POST'> {% csrf_token %}
+    <a class="btn btn-primary" href="/search">Click to go back</a>
     <p>Enter index of desired deleted data:</p>
      <input type="text" name="index">
     <button type="submit">Submit</button>
 </form>
 <p>{{del_data}}</p>
-{% if error%}
-    <p>Error: Incorrect info added, please try again!</p>
-{% else %}
-    {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
-        <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
-    {% endfor %}
-{% endif %}

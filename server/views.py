@@ -48,8 +48,8 @@ def search(request):
         while( x != line_count-1):
             x += 1
             for y in range(8):
-                if(caseList[x][y][0:5] == searched_data or caseList[x][y].lower() == searched_data.lower()):
-                    data_info.append(caseList[x][0:8])
+                if(caseList[x][y] == searched_data):
+                    data_info.append(caseList[x])
 
     #print(len(data_info))
     if (len(data_info)<2 or searched_data > str((len(caseList)))):

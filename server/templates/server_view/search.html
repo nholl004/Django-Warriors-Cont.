@@ -6,8 +6,8 @@
 </form>
 
 <form method='POST'> {% csrf_token %}
-    <button type="submit">Delete</button>
-    <button type="submit">Insert</button>
+    <a class="btn btn-primary" href="/delete">Delete</a>
+    <a class="btn btn-primary" href="/insert">Insert</a>
     <p>To remove data select "Delete" button. To add data select "Insert" button.</p>
 </form>
 
