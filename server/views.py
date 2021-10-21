@@ -160,6 +160,36 @@ def insert(request):
         return render(request,'server_view/insert.html',{'error':error,'observ':observ1,'state':state1,'country':country1,
     'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
 
+# This update feature, is able to update the current data structure with input of strings. 
+# Given the index, we can update the row to which the data is inputted. Similar to that of insert. 
+
+
+def update(request):
+
+    
+    indexToUpdate = str(request.POST.get('index'))
+    observ1 = str(request.POST.get('observ'))
+    state1 = str(request.POST.get('state'))
+    state1 = '\"' + state1 + '\"'
+    country1 = str(request.POST.get('country'))
+    lastUp1 = str(request.POST.get('lastUp'))
+    confirms1 = str(request.POST.get('confirm'))
+    deaths1 = str(request.POST.get('deaths'))
+    recovered1 = str(request.POST.get('recover'))
+    recovered1 = recovered1 + '\n'
+
+    if not indexToUpdate or not observ1 or not country1 or not lastUp1 or not confirms1 or not deaths1 or not recovered1:
+        error = True
+        return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'observ':observ1,'state':state1,'country':country1,
+    'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
+    else:
+        error = False
+        
+
+    
+        return render(request,'server_view/insert.html',{'error':error,'index':indexToUpdate,'observ':observ1,'state':state1,'country':country1,
+    'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
+
 # def searched(request):
 #     queryset = search.objects.all()
 #     context = {
