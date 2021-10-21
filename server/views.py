@@ -34,10 +34,11 @@ for line in csv_file:
         infoList = tmp1
 
     caseList.append(infoList)
-    #print(infoList)
+    # print(infoList)
     line_count += 1
 caseList.pop(0)
-#print(caseList[11347:11349])
+# print(caseList)
+
 def search(request):
     searched_data = request.POST.get('search')
     #print(searched_data)
@@ -48,11 +49,11 @@ def search(request):
         while( x != line_count-1):
             x += 1
             for y in range(8):
-                if(caseList[x][y] == searched_data):
+                if(caseList[x][y][0:5] == searched_data or caseList[x][y].lower() == searched_data.lower()):
                     data_info.append(caseList[x])
 
     #print(len(data_info))
-    if (len(data_info)<2 or searched_data > str((len(caseList)))):
+    if (len(data_info)<2):
         error = True
         return render(request,'server_view/search.html', {'searched':searched_data, 
         'error':error})
@@ -63,6 +64,21 @@ def search(request):
         #print(data_info)
         return render(request,'server_view/search.html', {'searched':searched_data,
         'data_info':data_info,'error':error})
+
+def backup(request):
+    #make a copy of current data 
+    #parse the current data into another csv file 
+    with open('covid_19_data.csv','r') as originalFile, open('covid_19_data_backup.csv','a') as backupFile:
+        for line in originalFile:
+            backupFile.write(line)
+
+    return render(request, 'server_view/backup.html')
+
+    
+
+
+    
+    
 
 #This function Deletes the data at the specific SNo value.
 #This value is obtained in /search url and requires user input.     

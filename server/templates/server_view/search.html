@@ -1,17 +1,39 @@
 <h1>Search Data</h1>
 
 <form method='POST'> {% csrf_token %}
-    Search: <input type="text" name="search">
+    Search: <input type="text" name='search' id="search_bar" placeholder = "Choose example format">
     <button type="submit">Search</button>
+    <select id="guide_format" onChange = "change()">
+        <option value='' disabled selected>Select your Format</option>
+        <option value="#">SNo</option>
+        <option value="MM/DD/YYYY">Observation Date</option>
+        <option value="Example: New York">Province/State</option>
+        <option value="Example: United States">Country</option>
+        <option value="MM/DD/YYYY HH:MM">Last Updated</option>
+        <option value="#">Confirmed</option>
+        <option value="#">Deaths</option>
+        <option value="#">Recovered</option>
+    </select>
 </form>
+
+<script type = "text/javascript">
+    function change() {
+        var select = document.getElementById('guide_format');
+        var option = select.options[select.selectedIndex];
+
+        document.getElementById('search_bar').placeholder = option.value;
+    }
+</script>
 
 <form method='POST'> {% csrf_token %}
     <a class="btn btn-primary" href="/delete">Delete</a>
     <a class="btn btn-primary" href="/insert">Insert</a>
     <a class="btn btn-primary" href="/update">Update</a>
     <p>To remove data select "Delete" button. To add data select "Insert" button. To update a certain index, select the "Update" button</p>
+    <a class="btn btn-primary" href="/backup">Backup</a>
 </form>
 
+<h1>{{searched}}</h1>
 {% if error%}
     <p>Error: Incorrect info added, please try again!</p>
 {% else %}
