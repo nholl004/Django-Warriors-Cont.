@@ -1,7 +1,8 @@
 <h1>Search Data</h1>
 
 <form method='POST'> {% csrf_token %}
-    Search: <input type="text" name="searched" id="search_bar" placeholder = "Choose example format">
+    Search: <input type="text" name='search' id="search_bar" placeholder = "Choose example format">
+    <button type="submit">Search</button>
     <select id="guide_format" onChange = "change()">
         <option value='' disabled selected>Select your Format</option>
         <option value="#">SNo</option>
@@ -13,7 +14,6 @@
         <option value="#">Deaths</option>
         <option value="#">Recovered</option>
     </select>
-    <button type="submit">Search</button>
 </form>
 
 <script type = "text/javascript">
@@ -25,8 +25,6 @@
     }
 </script>
 
-
-<h1>{{searched}}</h1>
 <form method='POST'> {% csrf_token %}
     <a class="btn btn-primary" href="/delete">Delete</a>
     <a class="btn btn-primary" href="/insert">Insert</a>
@@ -34,6 +32,7 @@
     <p>To remove data select "Delete" button. To add data select "Insert" button.</p>
 </form>
 
+<h1>{{searched}}</h1>
 {% if error%}
     <p>Error: Incorrect info added, please try again!</p>
 {% else %}
