@@ -38,6 +38,7 @@ for line in csv_file:
     line_count += 1
 caseList.pop(0)
 #print(caseList[11347:11349])
+
 def search(request):
     searched_data = request.POST.get('search')
     #print(searched_data)
@@ -63,6 +64,21 @@ def search(request):
         #print(data_info)
         return render(request,'server_view/search.html', {'searched':searched_data,
         'data_info':data_info,'error':error})
+
+def backup(request):
+    #make a copy of current data 
+    #parse the current data into another csv file 
+    with open('covid_19_data.csv','r') as originalFile, open('covid_19_data_backup.csv','a') as backupFile:
+        for line in originalFile:
+            backupFile.write(line)
+
+    return render(request, 'server_view/backup.html')
+
+    
+
+
+    
+    
 
 #This function Deletes the data at the specific SNo value.
 #This value is obtained in /search url and requires user input.     
