@@ -27,4 +27,5 @@ urlpatterns = [
     path('backup',views.backup),
     path('delete',views.delete),
     path('insert',views.insert),
+    path('update',views.update),
 ]
