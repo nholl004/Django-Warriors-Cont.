@@ -5,9 +5,14 @@
     <button type="submit">Search</button>
 </form>
 
-<h1>{{searched}}</h1>
+<form method='POST'> {% csrf_token %}
+    <a class="btn btn-primary" href="/delete">Delete</a>
+    <a class="btn btn-primary" href="/insert">Insert</a>
+    <p>To remove data select "Delete" button. To add data select "Insert" button.</p>
+</form>
+
 {% if error%}
-    <p>Error: incorrect info added try...</p>
+    <p>Error: Incorrect info added, please try again!</p>
 {% else %}
     {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
         <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
