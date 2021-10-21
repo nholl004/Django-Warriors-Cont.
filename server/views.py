@@ -166,29 +166,27 @@ def insert(request):
 
 def update(request):
 
-    
     indexToUpdate = str(request.POST.get('index'))
-    observ1 = str(request.POST.get('observ'))
-    state1 = str(request.POST.get('state'))
-    state1 = '\"' + state1 + '\"'
-    country1 = str(request.POST.get('country'))
-    lastUp1 = str(request.POST.get('lastUp'))
-    confirms1 = str(request.POST.get('confirm'))
-    deaths1 = str(request.POST.get('deaths'))
-    recovered1 = str(request.POST.get('recover'))
-    recovered1 = recovered1 + '\n'
+    confirms2 = str(request.POST.get('confirm'))
+    deaths2 = str(request.POST.get('deaths'))
+    recovered2 = str(request.POST.get('recover'))
 
-    if not indexToUpdate or not observ1 or not country1 or not lastUp1 or not confirms1 or not deaths1 or not recovered1:
+    if not indexToUpdate or not confirms2 or not deaths2 or not recovered2:
         error = True
-        return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'observ':observ1,'state':state1,'country':country1,
-    'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
+        return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
     else:
         error = False
-        
 
-    
-        return render(request,'server_view/insert.html',{'error':error,'index':indexToUpdate,'observ':observ1,'state':state1,'country':country1,
-    'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
+        if(indexToUpdate == 'None'):
+            return render(request,'server_view/update.html')
+        else:
+            indU = int(indexToUpdate) - 1
+            caseList[indU][5] = confirms2
+            caseList[indU][6] = deaths2
+            caseList[indU][7] = recovered2
+
+
+        return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
 # def searched(request):
 #     queryset = search.objects.all()
