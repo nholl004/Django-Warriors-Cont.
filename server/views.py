@@ -71,6 +71,19 @@ def search(request):
         'data_info':data_info,'error':error})
         #print(data_info)
 
+def backup(request):
+    #make a copy of current data 
+    #parse the current data into another csv file 
+    with open('covid_19_data.csv','r') as originalFile, open('covid_19_data_backup.csv') as backupFile:
+        for line in originalFile:
+            backupFile.write(line)
+
+    
+
+
+    
+    
+
 
 # def searched(request):
 #     queryset = search.objects.all()
