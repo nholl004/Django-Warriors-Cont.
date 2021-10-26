@@ -167,12 +167,6 @@ def update(request):
         if(indexToUpdate == 'None'):
             return render(request,'server_view/update.html')
         else:
-<<<<<<< HEAD
-            indU = int(indexToUpdate) - 1
-            caseList[indU][5] = confirms2
-            caseList[indU][6] = deaths2
-            caseList[indU][7] = recovered2
-=======
             for i in range(1,len(caseList)-1):
                 if(int(caseList[i][0]) == int(indexToUpdate)):                  
                     caseList[i][5] = str(confirms2+'.0')
@@ -181,8 +175,6 @@ def update(request):
                     print(caseList[i-2:i+4])
                 else:
                     error = True
->>>>>>> nholl004
-
 
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
