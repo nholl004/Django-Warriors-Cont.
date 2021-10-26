@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <h1>Updating data</h1>
 
 <form method='POST'> {% csrf_token %}
@@ -16,4 +17,24 @@
     <p>Make sure to iclude the "*" tabs!</p>
 {% else %}
     
+=======
+<h1>Updating data</h1>
+
+<form method='POST'> {% csrf_token %}
+    <a class="btn btn-primary" href="/search">Click to go back</a>
+    <p>Insert index that you want to change and the corresponding data info that you want to replace it:</p>
+    <body>
+        <p>Index: * <input type="text" name="index"></p>
+        <p>Confirmed: * <input type="text" name="confirm"></p>
+        <p>Deaths: * <input type="text" name="deaths"></p>
+        <p>Recovered: * <input type="text" name="recover"></p>
+        <button type="submit">Submit</button> 
+    </body>
+</form>
+
+{% if error%}
+    <p>Make sure to iclude the "*" tabs!</p>
+{% else %}
+    
+>>>>>>> nholl004
 {% endif %}

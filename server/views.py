@@ -68,16 +68,15 @@ def search(request):
 def backup(request):
     #make a copy of current data 
     #parse the current data into another csv file 
-    with open('covid_19_data.csv','r') as originalFile, open('covid_19_data_backup.csv','a') as backupFile:
-        for line in originalFile:
-            backupFile.write(line)
-
-    return render(request, 'server_view/backup.html')
-
-    
-
-
-    
+    test_file = open("covid_19_data.csv", "w")
+    line = ''
+    for x in caseList:
+        for y in range(0,8):
+            line += x[y]
+            if(y < 7):
+                line += ','
+    test_file.write(line)
+    test_file.close()
     
 
 #This function Deletes the data at the specific SNo value.
@@ -90,41 +89,24 @@ def delete(request):
     
     #print(caseList[1:5])
     if(delete_index == 'None'):
+        #print('hi')
         return render(request,'server_view/delete.html')
     elif(delete_index != 'None'):
+        #print(caseList[306426:])
         for i in range(1,len(caseList)-1):
             if(int(caseList[i][0]) == int(delete_index)):
                 cnt += 1
                 data = caseList[i]
                 caseList.pop(i)
-        #save result to file
-        if(cnt > 0):
-            test_file = open("covid_19_data.csv", "w")
-            line = ''
-            for x in caseList:
-                for y in range(0,8):
-                    line += x[y]
-                    if(y < 7):
-                        line += ','
-            test_file.write(line)
-            test_file.close()
-        
+
         #allows us to delete last value
-        elif(int(caseList[len(caseList)-1][0]) == int(delete_index)):
-            data = caseList[len(caseList)-1]
-            caseList.pop(len(caseList)-1)
-            test_file = open("covid_19_data.csv", "w")
-            line = ''
-            for x in caseList:
-                for y in range(0,8):
-                    line += x[y]
-                    if(y < 7):
-                        line += ','
-            test_file.write(line)
-            test_file.close()
-        else:
+            elif(int(caseList[len(caseList)-1][0]) == int(delete_index)):
+                cnt+=1
+                data = caseList[len(caseList)-1]
+                caseList.pop(len(caseList)-1)
+        if(cnt==0):
             data = 'No such index'
-        #print(caseList[1:5])
+        #print(caseList[306426:])
         return render(request,'server_view/delete.html',{'del_data':data})
 
 #This functions reads 7 user inputs after submit button pressed or enter
@@ -161,18 +143,7 @@ def insert(request):
 
         if(str(caseList[len(caseList)-1][1]) == "None"):
             caseList.pop(len(caseList)-1)
-        else:
-            print('this is where we save file')
-            test_file = open("covid_19_data.csv", "w")
-            line = ''
-            for x in caseList:
-                for y in range(0,8):
-                    line += x[y]
-                    if(y < 7):
-                        line += ','
-            test_file.write(line)
-            test_file.close()
-        
+
         return render(request,'server_view/insert.html',{'error':error,'observ':observ1,'state':state1,'country':country1,
     'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
 
@@ -196,10 +167,21 @@ def update(request):
         if(indexToUpdate == 'None'):
             return render(request,'server_view/update.html')
         else:
+<<<<<<< HEAD
             indU = int(indexToUpdate) - 1
             caseList[indU][5] = confirms2
             caseList[indU][6] = deaths2
             caseList[indU][7] = recovered2
+=======
+            for i in range(1,len(caseList)-1):
+                if(int(caseList[i][0]) == int(indexToUpdate)):                  
+                    caseList[i][5] = str(confirms2+'.0')
+                    caseList[i][6] = str(deaths2+'.0')
+                    caseList[i][7] = str(recovered2+'.0\n')
+                    print(caseList[i-2:i+4])
+                else:
+                    error = True
+>>>>>>> nholl004
 
 
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
