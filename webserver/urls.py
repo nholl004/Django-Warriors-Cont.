@@ -29,4 +29,7 @@ urlpatterns = [
     path('insert',views.insert),
     path('update',views.update),
     path('import',views.importButton),
+    path('cases',views.top_cases),
+    path('deaths',views.top_deaths),
+    path('recovs',views.top_recov),
 ]
