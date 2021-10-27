@@ -8,38 +8,54 @@ from .models import search
 
 caseList = [[]]
 line_count = 0
+import_cnt = 0
+def importButton(request):
+    global import_cnt
+    if(import_cnt == 0):
+    # print(request.POST.get('filename'))
+        importFunction()
+        import_cnt += 1
 
-csv_file = open("covid_19_data.csv")
-for line in csv_file:
-    infoList = []
-    infoList = line.split(',')
-    tmp = []
-    tmp1 = []
-    new_line = ''
-    if(len(infoList)>8):#fixes provice split issue
-        tmp = infoList[2:len(infoList)-5]
-        for x in range(len(tmp)):
-            new_line += tmp[x]
-            if(x < len(tmp)-1):
-                new_line += ', '
-        #print(tmp,new_line)
-        tmp1.append(infoList[0])
-        tmp1.append(infoList[1])
-        tmp1.append(new_line)
-        tmp1.append(infoList[(len(infoList)-5)])
-        tmp1.append(infoList[(len(infoList)-4)])
-        tmp1.append(infoList[(len(infoList)-3)])
-        tmp1.append(infoList[(len(infoList)-2)])
-        tmp1.append(infoList[(len(infoList)-1)])
-        infoList = tmp1
+    return render(request, 'server_view/import.html')
 
-    caseList.append(infoList)
-    # print(infoList)
-    line_count += 1
-caseList.pop(0)
-# print(caseList)
+def importFunction():
+    csv_file = open("covid_19_data.csv")
+    global line_count 
+    global caseList
+    for line in csv_file:
+        infoList = []
+        infoList = line.split(',')
+        tmp = []
+        tmp1 = []
+        new_line = ''
+        if(len(infoList)>8):#fixes provice split issue
+            tmp = infoList[2:len(infoList)-5]
+            for x in range(len(tmp)):
+                new_line += tmp[x]
+                if(x < len(tmp)-1):
+                    new_line += ', '
+            #print(tmp,new_line)
+            tmp1.append(infoList[0])
+            tmp1.append(infoList[1])
+            tmp1.append(new_line)
+            tmp1.append(infoList[(len(infoList)-5)])
+            tmp1.append(infoList[(len(infoList)-4)])
+            tmp1.append(infoList[(len(infoList)-3)])
+            tmp1.append(infoList[(len(infoList)-2)])
+            tmp1.append(infoList[(len(infoList)-1)])
+            infoList = tmp1
 
+        caseList.append(infoList)
+        # print(infoList)
+        line_count += 1
+    caseList.pop(0)
+    print(len(caseList))
+    # print(caseList)
+print(len(caseList))
 def search(request):
+    global line_count 
+    global caseList
+    print(len(caseList))
     searched_data = request.POST.get('search')
     #print(searched_data)
     x = 0
@@ -64,6 +80,8 @@ def search(request):
         #print(data_info)
         return render(request,'server_view/search.html', {'searched':searched_data,
         'data_info':data_info,'error':error})
+
+    
 
 def backup(request):
     #make a copy of current data 
