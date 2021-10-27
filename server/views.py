@@ -49,13 +49,12 @@ def importFunction():
         # print(infoList)
         line_count += 1
     caseList.pop(0)
-    print(len(caseList))
-    # print(caseList)
-print(len(caseList))
+    print('case size:',len(caseList))
+print('case size:',len(caseList))
 def search(request):
     global line_count 
     global caseList
-    print(len(caseList))
+
     searched_data = request.POST.get('search')
     #print(searched_data)
     x = 0
@@ -81,7 +80,66 @@ def search(request):
         return render(request,'server_view/search.html', {'searched':searched_data,
         'data_info':data_info,'error':error})
 
-    
+def top_cases(request):
+    global caseList
+    tmp = caseList
+    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+
+    for i in range(1,len(tmp)):
+        if(float(list[0][5])<float(tmp[i][5]) and float(list[0][5])<=float(list[1][5]) and float(list[0][5])<=float(list[2][5])):
+            list.pop(0)
+            list.append(tmp[i])
+        elif(float(list[1][5])<float(tmp[i][5]) and float(list[1][5])<=float(list[0][5]) and float(list[1][5])<=float(list[2][5])):
+            list.pop(1)
+            list.append(tmp[i])
+        elif(float(list[2][5])<float(tmp[i][5]) and float(list[2][5])<=float(list[0][5]) and float(list[2][5])<=float(list[1][5])):    
+            list.pop(2)
+            list.append(tmp[i])
+
+    print(list)
+    return render(request, 'server_view/top_cases.html',{'data_info':list})    
+
+def top_deaths(request):
+    global caseList
+    tmp = caseList
+    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+
+    for i in range(1,len(tmp)):
+        if(float(list[0][6])<float(tmp[i][6]) and float(list[0][6])<=float(list[1][6]) and float(list[0][6])<=float(list[2][6])):
+            list.pop(0)
+            list.append(tmp[i])
+        elif(float(list[1][6])<float(tmp[i][6]) and float(list[1][6])<=float(list[0][6]) and float(list[1][6])<=float(list[2][6])):
+            list.pop(1)
+            list.append(tmp[i])
+        elif(float(list[2][6])<float(tmp[i][6]) and float(list[2][6])<=float(list[0][6]) and float(list[2][6])<=float(list[1][6])):    
+            list.pop(2)
+            list.append(tmp[i])
+
+    print(list)
+    return render(request, 'server_view/top_deaths.html',{'data_info':list})    
+
+
+def top_recov(request):
+    global caseList
+    tmp = caseList
+    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+
+    for i in range(1,len(tmp)):
+        #tmp[i][7] = tmp[i][7][0:len(tmp[i][7])-1]
+        #print(tmp[i][7])
+        if(float(list[0][7])<float(tmp[i][7]) and float(list[0][7])<=float(list[1][7]) and float(list[0][7])<=float(list[2][7])):
+            list.pop(0)
+            list.append(tmp[i])
+        elif(float(list[1][7])<float(tmp[i][7]) and float(list[1][7])<=float(list[0][7]) and float(list[1][7])<=float(list[2][7])):
+            list.pop(1)
+            list.append(tmp[i])
+        elif(float(list[2][7])<float(tmp[i][7]) and float(list[2][7])<=float(list[0][7]) and float(list[2][7])<=float(list[1][7])):    
+            list.pop(2)
+            list.append(tmp[i])
+
+    print(list)
+    return render(request, 'server_view/top_recov.html',{'data_info':list})    
+
 
 def backup(request):
     #make a copy of current data 
