@@ -51,3 +51,8 @@
     <p></p>
     <a class="btn btn-primary" href="/recovs">Recoveries</a>
 </form>
+
+<form method='POST'> {% csrf_token %}
+    <p>Get a confirmed to death ratio by entering serial number </p>
+    Confirmed to Death Ratio: <input type="text" name ="ConfirmtoDeath" id="ConfirmtoDeath" value="" placeholder="Serial Number">
+    <p> {{ratio}} <p>

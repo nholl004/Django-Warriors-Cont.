@@ -32,4 +32,5 @@ urlpatterns = [
     path('cases',views.top_cases),
     path('deaths',views.top_deaths),
     path('recovs',views.top_recov),
+    path('search',views.ConfirmToDeath)
 ]

@@ -51,6 +51,7 @@ def importFunction():
     caseList.pop(0)
     print('case size:',len(caseList))
 print('case size:',len(caseList))
+
 def search(request):
     global line_count 
     global caseList
@@ -255,6 +256,23 @@ def update(request):
 
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
+def ConfirmToDeath(request):
+    serialNo = str(request.POST.get('index'))
+    if not serialNo:
+        error = True
+        return render(request,'server_view/search',{'error':error,'index':serialNo })
+    else:
+        error = False
+        ratio = -1; 
+        for i in range(1,len(caseList) - 1):
+            if(int(caseList[i][0] == int(serialNo))):
+                ratio = int(caseList[i][5]) / int(caseList[i][6])
+            else:
+                error = True; 
+    return render(request,'server_view/search',{'error':error,'index':serialNo,'ratio':ratio })
+     
+
+            
 # def searched(request):
 #     queryset = search.objects.all()
 #     context = {
