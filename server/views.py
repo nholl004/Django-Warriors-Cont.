@@ -258,19 +258,34 @@ def update(request):
 
 def ConfirmToDeath(request):
     serialNo = str(request.POST.get('index'))
+    context = {}
     if not serialNo:
         error = True
-        return render(request,'server_view/search',{'error':error,'index':serialNo })
+        return render(request,'server_view/confirmtodeath.html',{'error':error,'index':serialNo })
     else:
         error = False
+        if(serialNo == 'None'):
+            return render(request,'server_view/confirmtodeath.html')
         ratio = -1; 
+    
         for i in range(1,len(caseList) - 1):
-            if(int(caseList[i][0] == int(serialNo))):
-                ratio = int(caseList[i][5]) / int(caseList[i][6])
+            if(int(caseList[i][0]) == int(serialNo)):
+                casesConfirmed = float(caseList[i][5])
+                casesDeaths = float(caseList[i][6])
+                if(casesDeaths == 0):
+                    casesDeaths = 1
+                ratio = casesConfirmed / casesDeaths
+                context["confirmedCases"] = str(casesConfirmed)
+                context["confirmedDeaths"] = str(casesDeaths)
+                
+                context["ratio"] = ratio 
+                print(ratio)
+                return render(request,'server_view/confirmtodeath.html',context, {'error':error,'index':serialNo})
             else:
-                error = True; 
-    return render(request,'server_view/search',{'error':error,'index':serialNo,'ratio':ratio })
-     
+                error = True;    
+
+    return render(request,'server_view/confirmtodeath.html',{'error':error,'index':serialNo })
+      
 
             
 # def searched(request):

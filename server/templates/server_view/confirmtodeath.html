@@ -1,0 +1,13 @@
+<h1>Confirm to Death Ratio</h1>
+
+<form method='POST'> {% csrf_token %}
+    <a class="btn btn-primary" href="/search">Click to go back</a>
+    <p>Insert info:</p>
+    <body>
+        <p>Serial Number <input type="text" name="index" id="index"></p>
+        <button type="submit">Submit</button>
+        <p> 0 deaths are considered 1 death </p> 
+        <p> Ratio: {{confirmedCases}} / {{confirmedDeaths}} = {{ratio}} </p> 
+    </body>
+</form>
+
