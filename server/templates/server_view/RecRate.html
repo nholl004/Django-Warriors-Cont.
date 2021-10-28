@@ -1,0 +1,10 @@
+{% if error%}
+    <p> Error: File was not imported!</p>
+    <a class="btn btn-primary" href="/search">Return</a>
+{% else %}
+    <p>Recovery Rates:</p>
+    {% for state,country, recRate in data_info %}
+        <p>{{state}} , {{country}} , {{recRate}}</p>
+    {% endfor %}
+    <a class="btn btn-primary" href="/search">Return</a>
+{% endif %}
