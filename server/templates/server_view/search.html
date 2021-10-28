@@ -56,3 +56,7 @@
     <p>Recovery Rate for each city:</p>
     <a class = "btn btn-primary" href="/rate">Recovery Rates</a>
 </form>
+
+<form method='POST'> {% csrf_token %}
+    <p>Get a confirmed to death ratio by entering serial number </p>
+    <a class ="btn btn-primary" href="/ConfirmtoDeath">Confirm to Death</a>

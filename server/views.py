@@ -51,6 +51,7 @@ def importFunction():
     caseList.pop(0)
     print('case size:',len(caseList))
 print('case size:',len(caseList))
+
 def search(request):
     global line_count 
     global caseList
@@ -255,6 +256,36 @@ def update(request):
 
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
+def ConfirmToDeath(request):
+    serialNo = str(request.POST.get('index'))
+    context = {}
+    if not serialNo:
+        error = True
+        return render(request,'server_view/confirmtodeath.html',{'error':error,'index':serialNo })
+    else:
+        error = False
+        if(serialNo == 'None'):
+            return render(request,'server_view/confirmtodeath.html')
+        ratio = -1; 
+    
+        for i in range(1,len(caseList) - 1):
+            if(int(caseList[i][0]) == int(serialNo)):
+                casesConfirmed = float(caseList[i][5])
+                casesDeaths = float(caseList[i][6])
+                if(casesDeaths == 0):
+                    casesDeaths = 1
+                ratio = casesConfirmed / casesDeaths
+                context["confirmedCases"] = str(casesConfirmed)
+                context["confirmedDeaths"] = str(casesDeaths)
+                
+                context["ratio"] = ratio 
+                print(ratio)
+                return render(request,'server_view/confirmtodeath.html',context, {'error':error,'index':serialNo})
+            else:
+                error = True;    
+
+    return render(request,'server_view/confirmtodeath.html',{'error':error,'index':serialNo })
+      
 # Function shows the recovery rate in each city
 # Confirmed / recovered
 def rec_Rate(request):
@@ -281,6 +312,7 @@ def rec_Rate(request):
     return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
 
+            
 # def searched(request):
 #     queryset = search.objects.all()
 #     context = {
