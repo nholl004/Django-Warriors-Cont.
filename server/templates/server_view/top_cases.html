@@ -1,8 +1,9 @@
+
 {% if error%}
     <p> Error: File was not imported!</p>
     <a class="btn btn-primary" href="/search">Return</a>
 {% else %}
-    <p>Top 3 most cases:</p>
+    <p>Most cases found in these provinces/states:</p>
     {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
         <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
     {% endfor %}
