@@ -84,18 +84,26 @@ def search(request):
 def top_cases(request):
     global caseList
     tmp = caseList
-    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
-
-    for i in range(1,len(tmp)):
-        if(float(list[0][5])<float(tmp[i][5]) and float(list[0][5])<=float(list[1][5]) and float(list[0][5])<=float(list[2][5])):
-            list.pop(0)
-            list.append(tmp[i])
-        elif(float(list[1][5])<float(tmp[i][5]) and float(list[1][5])<=float(list[0][5]) and float(list[1][5])<=float(list[2][5])):
-            list.pop(1)
-            list.append(tmp[i])
-        elif(float(list[2][5])<float(tmp[i][5]) and float(list[2][5])<=float(list[0][5]) and float(list[2][5])<=float(list[1][5])):    
-            list.pop(2)
-            list.append(tmp[i])
+    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
+    ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
+    ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
+    ,[0,0,0,0,0,0,0,0]]
+    
+    for i in range(1,len(tmp)): 
+        k =0
+        if(tmp[i][2] != ''):
+            for j in range(0,10): # checks to make sure no duplicate states. Takes the greatest value.  
+                for x in range(0,10):
+                    if(list[j][2]==list[x][2]):
+                        if(float(list[j][5])<float(list[x][5])):
+                            list.pop(j)
+                            list.append([0,0,0,0,0,0,0,0])
+            for l in range(0,10):#finds the lowest value
+                if(float(list[l][5])<=float(list[k][5])):
+                    k = l 
+            if(float(list[k][5])<float(tmp[i][5])):#pops lowest value if new found value is greater
+                list.pop(k)
+                list.append(tmp[i])
 
     print(list)
     return render(request, 'server_view/top_cases.html',{'data_info':list})    
@@ -103,18 +111,26 @@ def top_cases(request):
 def top_deaths(request):
     global caseList
     tmp = caseList
-    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
-
-    for i in range(1,len(tmp)):
-        if(float(list[0][6])<float(tmp[i][6]) and float(list[0][6])<=float(list[1][6]) and float(list[0][6])<=float(list[2][6])):
-            list.pop(0)
-            list.append(tmp[i])
-        elif(float(list[1][6])<float(tmp[i][6]) and float(list[1][6])<=float(list[0][6]) and float(list[1][6])<=float(list[2][6])):
-            list.pop(1)
-            list.append(tmp[i])
-        elif(float(list[2][6])<float(tmp[i][6]) and float(list[2][6])<=float(list[0][6]) and float(list[2][6])<=float(list[1][6])):    
-            list.pop(2)
-            list.append(tmp[i])
+    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
+    ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
+    ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
+    ,[0,0,0,0,0,0,0,0]]
+    
+    for i in range(1,len(tmp)): 
+        k =0
+        if(tmp[i][2] != ''):
+            for j in range(0,10): # checks to make sure no duplicate states. Takes the greatest value.  
+                for x in range(0,10):
+                    if(list[j][2]==list[x][2]):
+                        if(float(list[j][6])<float(list[x][6])):
+                            list.pop(j)
+                            list.append([0,0,0,0,0,0,0,0])
+            for l in range(0,10):#finds the lowest value
+                if(float(list[l][6])<=float(list[k][6])):
+                    k = l 
+            if(float(list[k][6])<float(tmp[i][6])):#pops lowest value if new found value is greater
+                list.pop(k)
+                list.append(tmp[i])
 
     print(list)
     return render(request, 'server_view/top_deaths.html',{'data_info':list})    
@@ -123,20 +139,26 @@ def top_deaths(request):
 def top_recov(request):
     global caseList
     tmp = caseList
-    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
-
-    for i in range(1,len(tmp)):
-        #tmp[i][7] = tmp[i][7][0:len(tmp[i][7])-1]
-        #print(tmp[i][7])
-        if(float(list[0][7])<float(tmp[i][7]) and float(list[0][7])<=float(list[1][7]) and float(list[0][7])<=float(list[2][7])):
-            list.pop(0)
-            list.append(tmp[i])
-        elif(float(list[1][7])<float(tmp[i][7]) and float(list[1][7])<=float(list[0][7]) and float(list[1][7])<=float(list[2][7])):
-            list.pop(1)
-            list.append(tmp[i])
-        elif(float(list[2][7])<float(tmp[i][7]) and float(list[2][7])<=float(list[0][7]) and float(list[2][7])<=float(list[1][7])):    
-            list.pop(2)
-            list.append(tmp[i])
+    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
+    ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
+    ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
+    ,[0,0,0,0,0,0,0,0]]
+    
+    for i in range(1,len(tmp)): 
+        k =0
+        if(tmp[i][2] != ''):
+            for j in range(0,10): # checks to make sure no duplicate states. Takes the greatest value.  
+                for x in range(0,10):
+                    if(list[j][2]==list[x][2]):
+                        if(float(list[j][7])<float(list[x][7])):
+                            list.pop(j)
+                            list.append([0,0,0,0,0,0,0,0])
+            for l in range(0,10):#finds the lowest value
+                if(float(list[l][7])<=float(list[k][7])):
+                    k = l 
+            if(float(list[k][7])<float(tmp[i][7])):#pops lowest value if new found value is greater
+                list.pop(k)
+                list.append(tmp[i])
 
     print(list)
     return render(request, 'server_view/top_recov.html',{'data_info':list})    
@@ -257,11 +279,11 @@ def update(request):
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
 def ConfirmToDeath(request):
-    serialNo = str(request.POST.get('index'))
+    serialNo = str(request.POST.get('SN'))
     context = {}
     if not serialNo:
         error = True
-        return render(request,'server_view/confirmtodeath.html',{'error':error,'index':serialNo })
+        return render(request,'server_view/confirmtodeath.html',{'error':error,'SN':serialNo })
     else:
         error = False
         if(serialNo == 'None'):
@@ -280,11 +302,11 @@ def ConfirmToDeath(request):
                 
                 context["ratio"] = ratio 
                 print(ratio)
-                return render(request,'server_view/confirmtodeath.html',context, {'error':error,'index':serialNo})
+                return render(request,'server_view/confirmtodeath.html',context, {'error':error,'SN':serialNo})
             else:
                 error = True;    
 
-    return render(request,'server_view/confirmtodeath.html',{'error':error,'index':serialNo })
+    #return render(request,'server_view/confirmtodeath.html',{'error':error,'SN':serialNo })
       
 # Function shows the recovery rate in each city
 # Confirmed / recovered
@@ -311,7 +333,8 @@ def rec_Rate(request):
 
     return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
-
+def graphtest(request):
+    return render(request, 'server_view/graphtest.html')
             
 # def searched(request):
 #     queryset = search.objects.all()
