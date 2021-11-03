@@ -25,6 +25,14 @@
     }
 </script>
 
+{% if error%}
+    <p> Error: Incorrect info added, please try again!</p>
+{% else %}
+    {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
+        <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
+    {% endfor %}
+{% endif %}
+
 <form method='POST'> {% csrf_token %}
     <a class="btn btn-primary" href="/delete">Delete</a>
     <a class="btn btn-primary" href="/insert">Insert</a>
@@ -35,13 +43,6 @@
     <p>Make sure to import data!</p>
 </form>
 
-{% if error%}
-    <p> Error: Incorrect info added, please try again!</p>
-{% else %}
-    {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
-        <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
-    {% endfor %}
-{% endif %}
 
 <form method='POST'> {% csrf_token %}
     <p>Check the top 3 most affected areas via cases/death/recovery:</p>
@@ -60,3 +61,4 @@
 <form method='POST'> {% csrf_token %}
     <p>Get a confirmed to death ratio by entering serial number </p>
     <a class ="btn btn-primary" href="/ConfirmtoDeath">Confirm to Death</a>
+</form>
