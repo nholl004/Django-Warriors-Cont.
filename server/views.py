@@ -1,6 +1,7 @@
 from types import NoneType
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 
 from .forms import serverForm
 from .models import search
@@ -11,17 +12,16 @@ line_count = 0
 import_cnt = 0
 def importButton(request):
     global import_cnt
-    if(import_cnt == 0):
-    # print(request.POST.get('filename'))
-        importFunction()
-        import_cnt += 1
-
+    importFunction()
     return render(request, 'server_view/import.html')
 
 def importFunction():
-    csv_file = open("covid_19_data.csv")
     global line_count 
     global caseList
+
+    tmp_list = [[]]
+    csv_file = open("covid_19_data.csv")
+    
     for line in csv_file:
         infoList = []
         infoList = line.split(',')
@@ -45,10 +45,11 @@ def importFunction():
             tmp1.append(infoList[(len(infoList)-1)])
             infoList = tmp1
 
-        caseList.append(infoList)
+        tmp_list.append(infoList)
         # print(infoList)
         line_count += 1
-    caseList.pop(0)
+    tmp_list.pop(0)
+    caseList = tmp_list
     print('case size:',len(caseList))
 print('case size:',len(caseList))
 
@@ -88,7 +89,9 @@ def top_cases(request):
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0]]
-    
+    conf = []
+    prov = []
+
     for i in range(1,len(tmp)): 
         k =0
         if(tmp[i][2] != ''):
@@ -104,9 +107,11 @@ def top_cases(request):
             if(float(list[k][5])<float(tmp[i][5])):#pops lowest value if new found value is greater
                 list.pop(k)
                 list.append(tmp[i])
-
-    print(list)
-    return render(request, 'server_view/top_cases.html',{'data_info':list})    
+    for fill in list:#fills values for graph
+        conf.append(fill[5])
+        prov.append(fill[2])
+    return render(request, 'server_view/top_cases.html',{'data_info':list,
+    'conf':conf,'prov':prov})    
 
 def top_deaths(request):
     global caseList
@@ -115,7 +120,9 @@ def top_deaths(request):
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0]]
-    
+    deaths = []
+    prov = []
+
     for i in range(1,len(tmp)): 
         k =0
         if(tmp[i][2] != ''):
@@ -131,9 +138,12 @@ def top_deaths(request):
             if(float(list[k][6])<float(tmp[i][6])):#pops lowest value if new found value is greater
                 list.pop(k)
                 list.append(tmp[i])
-
-    print(list)
-    return render(request, 'server_view/top_deaths.html',{'data_info':list})    
+    for fill in list:#fills values for graph
+        deaths.append(fill[6])
+        prov.append(fill[2])
+    #print(list)
+    return render(request, 'server_view/top_deaths.html',{'data_info':list,
+    'deaths':deaths,'prov':prov})    
 
 
 def top_recov(request):
@@ -143,7 +153,9 @@ def top_recov(request):
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0]]
-    
+    recov = []
+    prov = []
+
     for i in range(1,len(tmp)): 
         k =0
         if(tmp[i][2] != ''):
@@ -159,9 +171,12 @@ def top_recov(request):
             if(float(list[k][7])<float(tmp[i][7])):#pops lowest value if new found value is greater
                 list.pop(k)
                 list.append(tmp[i])
+    for fill in list:#fills values for graph
+        recov.append(fill[7])
+        prov.append(fill[2])
 
-    print(list)
-    return render(request, 'server_view/top_recov.html',{'data_info':list})    
+    return render(request, 'server_view/top_recov.html',{'data_info':list,
+    'recov':recov,'prov':prov})    
 
 
 def backup(request):
@@ -333,33 +348,4 @@ def rec_Rate(request):
 
     return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
-def graphtest(request):
-    return render(request, 'server_view/graphtest.html')
             
-# def searched(request):
-#     queryset = search.objects.all()
-#     context = {
-#         "object_list": queryset
-#     }
-#     return render(request, "server_view/search_list.html", context)
-
-
-# def searching(request):
-#     search_form = serverForm()
-#     if request.method == "POST":
-#         search_form = serverForm(request.POST)
-#         if search_form.is_valid():
-#             #print(search_form.cleaned_data)
-#             search.objects.create(**search_form.cleaned_data)
-#         else:
-#             print(search_form.errors)
-#     context = {
-#         'form': search_form,
-#     }
-#     return render(request, "server_view/create_view.html", context)
-
-# def test(request,*args, **kwargs):
-#     return HttpResponse('Hello World')
-
-# def test1(request, *args, **kwargs):
-#     return render(request, 'test.html', {})
