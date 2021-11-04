@@ -1,0 +1,12 @@
+h1 {
+  font-size: 55px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: #96b7ce;
+}
+body {
+  position: relative;
+  top: 200px;
+  width:1900px;
+  background-color: rgb(34, 56, 63);
+  text-align: center;
+}

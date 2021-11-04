@@ -1,0 +1,17 @@
+<h1>Inserting Data</h1>
+
+<form method='POST'> {% csrf_token %}
+    <a class="btn btn-primary" href="/search">Click to go back</a>
+    <p>Daily cases in a certain location and month:</p>
+    <body>
+        <p>Month:("mm" format)  <input type="text" name="month"></p>
+        <p>Year: ("yyyy" format) <input type="text" name ="year"</p>
+        <p>Province/State: <input type="text" name="location"></p>
+        <button type="submit">Submit</button> 
+        <p>SNo, ObservationDate, Province/State, Country/Region, Last Update, Confirmed,Deaths, Recovered</p>
+        {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
+            <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
+        {% endfor %} 
+    </body>
+</form>
+    
