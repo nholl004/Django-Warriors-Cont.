@@ -62,3 +62,9 @@
     <p>Get a confirmed to death ratio by entering serial number </p>
     <a class ="btn btn-primary" href="/ConfirmtoDeath">Confirm to Death</a>
 </form>
+
+<form method='POST'> {% csrf_token %}
+    <p> Compare 2 Provinces/States: </p>
+    <a class = "btn btn-primary" href = "/compare">Comparison</a>
+</form>
+
