@@ -1,6 +1,7 @@
 from types import NoneType
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 
 from .forms import serverForm
 from .models import search
@@ -11,17 +12,16 @@ line_count = 0
 import_cnt = 0
 def importButton(request):
     global import_cnt
-    if(import_cnt == 0):
-    # print(request.POST.get('filename'))
-        importFunction()
-        import_cnt += 1
-
+    importFunction()
     return render(request, 'server_view/import.html')
 
 def importFunction():
-    csv_file = open("covid_19_data.csv")
     global line_count 
     global caseList
+
+    tmp_list = [[]]
+    csv_file = open("covid_19_data.csv")
+    
     for line in csv_file:
         infoList = []
         infoList = line.split(',')
@@ -45,10 +45,11 @@ def importFunction():
             tmp1.append(infoList[(len(infoList)-1)])
             infoList = tmp1
 
-        caseList.append(infoList)
+        tmp_list.append(infoList)
         # print(infoList)
         line_count += 1
-    caseList.pop(0)
+    tmp_list.pop(0)
+    caseList = tmp_list
     print('case size:',len(caseList))
 print('case size:',len(caseList))
 
@@ -88,7 +89,9 @@ def top_cases(request):
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0]]
-    
+    conf = []
+    prov = []
+
     for i in range(1,len(tmp)): 
         k =0
         if(tmp[i][2] != ''):
@@ -104,9 +107,11 @@ def top_cases(request):
             if(float(list[k][5])<float(tmp[i][5])):#pops lowest value if new found value is greater
                 list.pop(k)
                 list.append(tmp[i])
-
-    print(list)
-    return render(request, 'server_view/top_cases.html',{'data_info':list})    
+    for fill in list:#fills values for graph
+        conf.append(fill[5])
+        prov.append(fill[2])
+    return render(request, 'server_view/top_cases.html',{'data_info':list,
+    'conf':conf,'prov':prov})    
 
 def top_deaths(request):
     global caseList
@@ -115,7 +120,9 @@ def top_deaths(request):
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0]]
-    
+    deaths = []
+    prov = []
+
     for i in range(1,len(tmp)): 
         k =0
         if(tmp[i][2] != ''):
@@ -131,9 +138,12 @@ def top_deaths(request):
             if(float(list[k][6])<float(tmp[i][6])):#pops lowest value if new found value is greater
                 list.pop(k)
                 list.append(tmp[i])
-
-    print(list)
-    return render(request, 'server_view/top_deaths.html',{'data_info':list})    
+    for fill in list:#fills values for graph
+        deaths.append(fill[6])
+        prov.append(fill[2])
+    #print(list)
+    return render(request, 'server_view/top_deaths.html',{'data_info':list,
+    'deaths':deaths,'prov':prov})    
 
 
 def top_recov(request):
@@ -143,7 +153,9 @@ def top_recov(request):
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
     ,[0,0,0,0,0,0,0,0]]
-    
+    recov = []
+    prov = []
+
     for i in range(1,len(tmp)): 
         k =0
         if(tmp[i][2] != ''):
@@ -159,9 +171,12 @@ def top_recov(request):
             if(float(list[k][7])<float(tmp[i][7])):#pops lowest value if new found value is greater
                 list.pop(k)
                 list.append(tmp[i])
+    for fill in list:#fills values for graph
+        recov.append(fill[7])
+        prov.append(fill[2])
 
-    print(list)
-    return render(request, 'server_view/top_recov.html',{'data_info':list})    
+    return render(request, 'server_view/top_recov.html',{'data_info':list,
+    'recov':recov,'prov':prov})    
 
 
 def backup(request):
@@ -278,7 +293,7 @@ def update(request):
 
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
-def ConfirmToDeath(request):
+def confirm_to_death(request):
     serialNo = str(request.POST.get('SN'))
     context = {}
     if not serialNo:
@@ -306,7 +321,7 @@ def ConfirmToDeath(request):
             else:
                 error = True;    
 
-    return render(request,'server_view/confirmtodeath.html',{'error':error,'SN':serialNo })
+    #return render(request,'server_view/confirmtodeath.html',{'error':error,'SN':serialNo })
       
 # Function shows the recovery rate in each city
 # Confirmed / recovered
@@ -333,8 +348,48 @@ def rec_Rate(request):
 
     return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
-def graphtest(request):
-    return render(request, 'server_view/graphtest.html')
+def daily_cases(request):
+    #sort the cases of a certain location and month
+    month = request.POST.get('month')
+    year = request.POST.get('year')
+    location = request.POST.get('location') #gets province/state
+    
+    #find the beginning of the month aka the first
+    #keep iterating until 28 days are iterated through
+    #a valid row is when month year current day and location are correct
+
+    dailyCasesList = []
+    currDay = 1
+
+    
+
+    for i in range(1, len(caseList) - 1):
+        splitList = split_date(caseList[i][1]) #split into 3  strings of "mm" "dd" "YYYY"
+        #convert the day to an integer
+        if(splitList[1][0] == '0'): #if first character in "dd" is 0 then convert second character to int
+            tmpDay = int(splitList[1][1])
+        else:
+            tmpDay = int(splitList[1])
+
+        if(splitList[0] == month and currDay == tmpDay and currDay <= 31 and splitList[2] == year and caseList[i][2] == location ):
+            #add valid row to list
+            dailyCasesList.append(caseList[i])
+            currDay = currDay + 1
+            
+    # print(dailyCasesList[0:-1])
+    # print(currDay)
+    return render(request, 'server_view/daily_cases.html', {'data_info':dailyCasesList})
+
+        
+
+def split_date(date):    
+    #mm/dd/yyyy
+    #0123456789
+    month = date[0:2]
+    day = date[3:5]
+    year = date[6:10]
+    dateList = [month,day,year]
+    return dateList
 
 # Comparing 2 States/Provinces: Graph Edition
 def compareTwo(request):
@@ -348,8 +403,6 @@ def compareTwo(request):
 
     state1 = str(request.POST.get('SP1'))
     state2 = str(request.POST.get('SP2'))
-    cases = []
-    cases2 = []
     # print("about to go into the if\n")
 
     if state1 == '' or state2 == '':
@@ -386,32 +439,3 @@ def compareTwo(request):
     # print("about to end\n")
         return render(request, 'server_view/compare.html',{'error':error, 'state1':state1, 'state2':state2, 'conf1':conf1, 'death1':death1, 'rec1':rec1, 'conf2':conf2, 'death2':death2, 'rec2':rec2, })
 
-
-            
-# def searched(request):
-#     queryset = search.objects.all()
-#     context = {
-#         "object_list": queryset
-#     }
-#     return render(request, "server_view/search_list.html", context)
-
-
-# def searching(request):
-#     search_form = serverForm()
-#     if request.method == "POST":
-#         search_form = serverForm(request.POST)
-#         if search_form.is_valid():
-#             #print(search_form.cleaned_data)
-#             search.objects.create(**search_form.cleaned_data)
-#         else:
-#             print(search_form.errors)
-#     context = {
-#         'form': search_form,
-#     }
-#     return render(request, "server_view/create_view.html", context)
-
-# def test(request,*args, **kwargs):
-#     return HttpResponse('Hello World')
-
-# def test1(request, *args, **kwargs):
-#     return render(request, 'test.html', {})
