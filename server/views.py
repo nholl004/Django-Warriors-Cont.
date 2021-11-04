@@ -390,3 +390,52 @@ def split_date(date):
     year = date[6:10]
     dateList = [month,day,year]
     return dateList
+
+# Comparing 2 States/Provinces: Graph Edition
+def compareTwo(request):
+    global caseList
+    conf1 = 0
+    conf2 = 0
+    death1 = 0
+    death2 = 0
+    rec1 = 0
+    rec2 = 0
+
+    state1 = str(request.POST.get('SP1'))
+    state2 = str(request.POST.get('SP2'))
+    # print("about to go into the if\n")
+
+    if state1 == '' or state2 == '':
+        # print("in if \n")
+        error = True
+        return render(request, 'server_view/compare.html',{'error':error, 'state1':state1, 'state2':state2, 'conf1':conf1, 'death1':death1, 'rec1':rec1, 'conf2':conf2, 'death2':death2, 'rec2':rec2, })
+
+    elif (int(caseList[305665][0]) >= 305665):
+        # print("in else if\n")
+        error = False
+        for line in range(305665,len(caseList)):
+            if (caseList[line][2].lower() == state1.lower()):
+                state1 = caseList[line][2]
+                # print("found \n", state1)
+                # cases.append(caseList[line][5])
+                # cases.append(caseList[line][6])
+                # cases.append(caseList[line][7])
+                conf1 = caseList[line][5]
+                death1 = caseList[line][6]
+                rec1 = caseList[line][7]
+            if (caseList[line][2].lower() == state2.lower()):
+                state2 = caseList[line][2]
+                conf2 = caseList[line][5]
+                death2 = caseList[line][6]
+                rec2 = caseList[line][7]
+                # cases2.append(caseList[line][5])
+                # cases2.append(caseList[line][6])
+                # cases2.append(caseList[line][7])
+                # print(conf2 +  " " + death2 + " " + rec2))
+        return render(request, 'server_view/compare.html',{'error':error, 'state1':state1, 'state2':state2, 'conf1':conf1, 'death1':death1, 'rec1':rec1, 'conf2':conf2, 'death2':death2, 'rec2':rec2, })
+    else:
+        # print("in else\n")
+        error = False
+    # print("about to end\n")
+        return render(request, 'server_view/compare.html',{'error':error, 'state1':state1, 'state2':state2, 'conf1':conf1, 'death1':death1, 'rec1':rec1, 'conf2':conf2, 'death2':death2, 'rec2':rec2, })
+

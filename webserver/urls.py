@@ -35,4 +35,5 @@ urlpatterns = [
     path('ConfirmtoDeath',views.confirm_to_death),
     path('rate',views.rec_Rate),
     path('daily',views.daily_cases),
+    path('compare',views.compareTwo),
 ]
