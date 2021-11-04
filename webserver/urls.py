@@ -32,6 +32,7 @@ urlpatterns = [
     path('cases',views.top_cases),
     path('deaths',views.top_deaths),
     path('recovs',views.top_recov),
-    path('ConfirmtoDeath',views.ConfirmToDeath),
+    path('ConfirmtoDeath',views.confirm_to_death),
     path('rate',views.rec_Rate),
+    path('daily',views.daily_cases),
 ]

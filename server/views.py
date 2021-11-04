@@ -293,7 +293,7 @@ def update(request):
 
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
-def ConfirmToDeath(request):
+def confirm_to_death(request):
     serialNo = str(request.POST.get('SN'))
     context = {}
     if not serialNo:
@@ -348,4 +348,31 @@ def rec_Rate(request):
 
     return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
-            
+def daily_cases(request):
+    #sort the cases of a certain location and month
+    month = request.POST.get('month')
+    location = request.POST.get('location') #gets prvoince/state
+
+    startDate = '02/07/2021'
+    splitList = split_date(startDate)
+    month = splitList[0]
+    day = splitList[1]
+    year = splitList[2]
+    print(month)
+    print(day)
+    print(year)
+    return render(request, 'server_view/search.html')
+    
+    #find the beginning of the month
+    #keep iterating until 28 days are iterated through
+    #for line in range(1, len(caseList)-1):
+        
+
+def split_date(date):    
+    #mm/dd/yyyy
+    #0123456789
+    month = date[0:2]
+    day = date[3:5]
+    year = date[6:10]
+    dateList = [month,day,year]
+    return dateList
