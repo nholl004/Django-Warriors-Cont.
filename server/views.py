@@ -349,3 +349,53 @@ def rec_Rate(request):
     return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
             
+def peakdays(request):
+    HighestPeakDiffConfirmed = 0 #index 6 for confirmed
+    HighestPeakDiffDeaths = 0 #index 7 for deaths
+    HighestPeakDiffRecovered = 0 #index 8 for recovered
+    DateOfHighestPeakConfirmed = ""
+    DateOfHighestPeakDeaths = ""
+    DateOfHighestPeakRecovered = ""
+    specificLocationList = []
+    tmpList = []
+    contexts = {}
+    Province_State = str(request.POST.get('Prov/State'))
+    Country_Region = str(request.POST.get('Country/Region'))
+
+    #parsing the current caselist [[]] to a more specific.
+    #for line in range(1, len(caseList) - 1):
+
+    print(Province_State)
+    print(Country_Region)
+    for i in range(1,len(caseList)-1):
+        if(caseList[i][3] == Country_Region and caseList[i][2] == Province_State):
+            for y in range(0,8):
+                tmpList.append(caseList[i][y])
+            specificLocationList.append(tmpList)
+            tmpList = []
+    #for k in range(1,len(specificLocationList)-1):
+    #    print(specificLocationList[k][6])
+    #Gathering peak data for confirmed cases.
+    for j in range(2,len(specificLocationList)-1):
+        if(float(specificLocationList[j][5]) - float(specificLocationList[j - 1][5]) > HighestPeakDiffConfirmed):
+            HighestPeakDiffConfirmed = float(specificLocationList[j][5]) - float(specificLocationList[j - 1][5])
+            DateOfHighestPeakConfirmed = specificLocationList[j][1]
+    contexts["confirmedCase"] = str(HighestPeakDiffConfirmed)
+    contexts["confirmedCaseDate"] = str(DateOfHighestPeakConfirmed)
+    #Gathering peak data for death cases.
+    for j in range(2,len(specificLocationList)-1):
+        if(float(specificLocationList[j][6]) - float(specificLocationList[j - 1][6]) > HighestPeakDiffDeaths):
+            HighestPeakDiffDeaths = float(specificLocationList[j][6]) - float(specificLocationList[j - 1][6])
+            DateOfHighestPeakDeaths = specificLocationList[j][1]
+    contexts["deathCase"] = str(HighestPeakDiffDeaths)
+    contexts["deathCaseDate"] = str(DateOfHighestPeakDeaths)
+    #Gathering peak data for recovered cases.
+    for j in range(2,len(specificLocationList)-1):
+        if(float(specificLocationList[j][7]) - float(specificLocationList[j - 1][7]) > HighestPeakDiffRecovered):
+            HighestPeakDiffRecovered = float(specificLocationList[j][7]) - float(specificLocationList[j - 1][7])
+            DateOfHighestPeakRecovered = specificLocationList[j][1]
+    contexts["recoveredCase"] = str(HighestPeakDiffRecovered)
+    contexts["recoveredCaseDate"] = str(DateOfHighestPeakRecovered)
+
+
+    return render(request, 'server_view/peakdays.html', contexts)
