@@ -293,7 +293,7 @@ def update(request):
 
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
-def ConfirmToDeath(request):
+def confirm_to_death(request):
     serialNo = str(request.POST.get('SN'))
     context = {}
     if not serialNo:
@@ -348,4 +348,45 @@ def rec_Rate(request):
 
     return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
+def daily_cases(request):
+    #sort the cases of a certain location and month
+    month = request.POST.get('month')
+    year = request.POST.get('year')
+    location = request.POST.get('location') #gets province/state
+    
+    #find the beginning of the month aka the first
+    #keep iterating until 28 days are iterated through
+    #a valid row is when month year current day and location are correct
+
+    dailyCasesList = []
+    currDay = 1
+
+    
+
+    for i in range(1, len(caseList) - 1):
+        splitList = split_date(caseList[i][1]) #split into 3  strings of "mm" "dd" "YYYY"
+        #convert the day to an integer
+        if(splitList[1][0] == '0'): #if first character in "dd" is 0 then convert second character to int
+            tmpDay = int(splitList[1][1])
+        else:
+            tmpDay = int(splitList[1])
+
+        if(splitList[0] == month and currDay == tmpDay and currDay <= 31 and splitList[2] == year and caseList[i][2] == location ):
+            #add valid row to list
+            dailyCasesList.append(caseList[i])
+            currDay = currDay + 1
             
+    # print(dailyCasesList[0:-1])
+    # print(currDay)
+    return render(request, 'server_view/daily_cases.html', {'data_info':dailyCasesList})
+
+        
+
+def split_date(date):    
+    #mm/dd/yyyy
+    #0123456789
+    month = date[0:2]
+    day = date[3:5]
+    year = date[6:10]
+    dateList = [month,day,year]
+    return dateList
