@@ -1,0 +1,27 @@
+.numDeaths {
+    font-weight: bold;
+    color: rgb(99, 0, 0);
+}
+
+.numCases {
+    font-weight: bold;
+    color: rgb(5, 65, 5)
+}
+
+.input {
+    font-size: 20px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #1d364e;
+    position: relative;
+    background-color: rgb(217, 246, 255);
+    text-align: center;
+}
+
+.result {
+    font-size: 15px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+h1 {
+    font-size: 40px;
+}

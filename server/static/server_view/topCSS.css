@@ -1,0 +1,11 @@
+.result {
+    font-size: 12px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #1d364e;
+    position: relative;
+    background-color: rgb(217, 246, 255);
+    text-align: left;
+}
+.resultTitle {
+    font-size: 25px;
+}
