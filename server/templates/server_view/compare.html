@@ -7,96 +7,41 @@
         <p> S/P #1 <input type = "text" name = "SP1" id = "SP1"></p>
         <p> S/P #2 <input type = "text" name = "SP2" id = 'SP2'></p>
         <button type = 'submit'>Compare</button>
-
-        <!-- <p>Below are the test outputs</p>
-        <p>State1 = {{state1}} : confirmed({{conf1}}) , deaths({{death1}}) , recovered({{rec1}})</p>
-        <p>State2 = {{state2}} : confirmed({{conf2}}) , deaths({{death2}}) , recovered({{rec2}})</p> -->
-
-
-        <!-- graph data -->
-        <!-- NEED TO IMPLEMENT -->
-        <!-- <div>
-            <canvas id="compare"></canvas>
-          </div>
-          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-          <script>
-              // === include 'setup' then 'config' above ===
-              const data = {
-                  labels: ['Confirmed', 'Deaths', 'Recovered'],
-                  datasets: [{
-                      label: 'State 1',
-                      backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)'],
-                      borderColor: [
-                      'rgb(255, 99, 132)',
-                      'rgb(255, 159, 64)',
-                      'rgb(255, 205, 86)',
-                      ],
-                      data: ['{{conf1}}', '{{death1}}', '{{rec1}}'],
-                      },
-                      {
-                          label: 'State 2',
-                          backgroundColor: [
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(153, 102, 255, 0.2)'],
-                          borderColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(255, 159, 64)',
-                            'rgb(255, 205, 86)',
-                          ],
-                        data: ['{{conf2}}', '{{death2}}', '{{rec2}}'],
-                      }]
-              };
-                const config = {
-                    type: 'bar',
-                    data: data,
-                    options: {
-                        indexAxis: 'y',
-                    }
-                });
-                const myChart = new Chart(
-                    document.getElementById("compare"),
-                    config
-                );
-          </script> -->
           <div>
-            <canvas id="compare"></canvas>
+            <canvas id="conf"></canvas>
           </div>
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
           <script>
               // === include 'setup' then 'config' above ===
               const data = {
-                  labels: ['Confirmed', 'Deaths','Recovered'],
+                  labels: ['Confirmed'],
                   datasets: [{
-                      label: ['{{state1}}'],
+                      label: '{{state1}}',
                       backgroundColor: [
-                      'blue',
-                      'blue',
-                      'blue',
+                      'rgb(99, 255, 252)',
+                      // 'blue',
+                      // 'blue',
                       ],
                       borderColor: [
-                      'rgb(255, 99, 132)',
-                      'rgb(255, 99, 132)',
-                      'rgb(255, 99, 132)',
+                      'rgb(99, 255, 252)',
+                      // 'rgb(255, 99, 132)',
+                      // 'rgb(255, 99, 132)',
                       ],
-                      data: [{{conf1}},{{death1}},{{rec1}}],
+                      data: [{{conf1}}],
                   },
                   {
-                      label: ['{{state2}}'],
+                      label: '{{state2}}',
                       backgroundColor: [
-                      'red',
-                      'red',
-                      'red',
+                      'rgb(253, 128, 255)',
+                      // 'red',
+                      // 'red',
                       ],
                       borderColor: [
-                      'rgb(255, 255, 132)',
-                      'rgb(255, 255, 132)',
-                      'rgb(255, 255, 132)',
+                      'rgb(253, 128, 255)',
+                      // 'rgb(255, 255, 132)',
+                      // 'rgb(255, 255, 132)',
                       ],
-                      data: [{{conf2}},{{death2}},{{rec2}}],
+                      data: [{{conf2}}],
                   },
                   
                 ]
@@ -109,8 +54,112 @@
                   }
               };
               const myChart = new Chart(
-                  document.getElementById('compare'),
+                  document.getElementById('conf'),
                   config
+              );
+          </script>
+
+          <div>
+            <canvas id="death"></canvas>
+          </div>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script>
+              // === include 'setup' then 'config' above ===
+              const data1 = {
+                  labels: ['Deaths'],
+                  datasets: [{
+                      label: '{{state1}}',
+                      backgroundColor: [
+                      'rgb(99, 255, 252)',
+                      // 'blue',
+                      // 'blue',
+                      ],
+                      borderColor: [
+                      'rgb(99, 255, 252)',
+                      // 'rgb(255, 99, 132)',
+                      // 'rgb(255, 99, 132)',
+                      ],
+                      data: [{{death1}}],
+                  },
+                  {
+                      label: '{{state2}}',
+                      backgroundColor: [
+                      'rgb(253, 128, 255)',
+                      // 'red',
+                      // 'red',
+                      ],
+                      borderColor: [
+                      'rgb(253, 128, 255)',
+                      // 'rgb(255, 255, 132)',
+                      // 'rgb(255, 255, 132)',
+                      ],
+                      data: [{{death2}}],
+                  },
+                  
+                ]
+              };
+              const config1 = {
+                  type: 'bar',
+                  data: data1,
+                  options: {
+                      indexAxis: 'x',
+                  }
+              };
+              const myChart1 = new Chart(
+                  document.getElementById('death'),
+                  config1
+              );
+          </script>
+
+          <div>
+            <canvas id="rec"></canvas>
+          </div>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script>
+              // === include 'setup' then 'config' above ===
+              const data2 = {
+                  labels: ['Recovered'],
+                  datasets: [{
+                      label: '{{state1}}',
+                      backgroundColor: [
+                      'rgb(99, 255, 252)',
+                      // 'blue',
+                      // 'blue',
+                      ],
+                      borderColor: [
+                      'rgb(99, 255, 252)',
+                      // 'rgb(255, 99, 132)',
+                      // 'rgb(255, 99, 132)',
+                      ],
+                      data: [{{rec1}}],
+                  },
+                  {
+                      label: '{{state2}}',
+                      backgroundColor: [
+                      'rgb(253, 128, 255)',
+                      // 'red',
+                      // 'red',
+                      ],
+                      borderColor: [
+                      'rgb(253, 128, 255)',
+                      // 'rgb(255, 255, 132)',
+                      // 'rgb(255, 255, 132)',
+                      ],
+                      data: [{{rec2}}],
+                  },
+                  
+                ]
+              };
+              const config2 = {
+                  type: 'bar',
+                  data: data2,
+                  options: {
+                      indexAxis: 'x',
+                  }
+              };
+              const myChart2 = new Chart(
+                  document.getElementById('rec'),
+                  config2
               );
           </script>
         
