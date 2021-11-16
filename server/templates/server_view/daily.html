@@ -13,9 +13,8 @@
             <p>Year: ("yyyy" format) <input type="text" name ="year"</p>
             <p>Province/State: <input type="text" name="location"></p>
             <button type="submit">Submit</button> 
-            <p>SNo, ObservationDate, Province/State, Country/Region, Last Update, Confirmed</p>
             {% for SNo, observ, state,country, lastUp, confirm in data_info %}
-                <p class = "result">{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} <span class = "numCases">Number of Cases: </span>{{confirm}}</p>
+                <p class = "result"><span class = descriptions>Serial Number:</span>{{SNo}} , <span class = descriptions>Observation Date: </span>{{observ}} , <span class = descriptions>State: </span>{{state}} , <span class = descriptions>Coutnry: </span>{{country}} , <span class = descriptions>Last Update: </span>{{lastUp}} <span class = "numCases">Number of Cases: </span>{{confirm}}</p>
             {% endfor %} 
         </body>
     </form>

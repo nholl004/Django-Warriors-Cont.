@@ -15,7 +15,7 @@
             <button type="submit">Submit</button> 
             {% comment %} <p>SNo, ObservationDate, Province/State, Country/Region, Last Update, Deaths</p> {% endcomment %}
             {% for SNo, observ, state, country, lastUp, deaths in data_info %}
-                <p class = result>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} <span class = "numDeaths"> Number of Deaths: </span> {{deaths}}</p>
+                <p class = result><span class = descriptions>Serial Number: </span> {{SNo}} , <span class = descriptions>Observation Date: </span> {{observ}} , <span class = descriptions>State: </span> {{state}} , <span class = descriptions>Country: </span> {{country}} , <span class = descriptions>Last Update: </span> {{lastUp}} <span class = "numDeaths"> Number of Deaths: </span> {{deaths}}</p>
             {% endfor %} 
         </body>
     </form>
