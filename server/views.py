@@ -317,7 +317,7 @@ def confirm_to_death(request):
                 
                 context["ratio"] = ratio 
                 print(ratio)
-                return render(request,'server_view/confirmtodeath.html',context, {'error':error,'SN':serialNo})
+                return render(request,'server_view/confirmtodeath.html', {'error':error,'SN':serialNo})
             else:
                 error = True;    
 
