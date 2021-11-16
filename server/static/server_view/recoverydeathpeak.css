@@ -1,0 +1,39 @@
+/* This css file will be made for recovery rates, confirm to death, and peak days */
+
+.result {
+    font-size: 15px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #1d364e;
+    position: relative;
+    background-color: rgb(217, 246, 255);
+    text-align: left;
+}
+
+.peakDaysResult {
+    font-size: 15px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #1d364e;
+    position: relative;
+    background-color: rgb(217, 246, 255);
+    text-align: center;
+}
+
+.resultTitle{
+    font-size: 25px;
+}
+
+.descriptions {
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(112, 112, 204)
+}
+
+.recovery {
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(218, 167, 0);
+}
+
+h1 {
+    font-size: 40px;
+}
