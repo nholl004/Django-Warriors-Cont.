@@ -4,7 +4,8 @@ h1 {
   color: #96b7ce;
 }
 body {
-  position: relative;
+  position: static;
+  text-align: center;
   top: 200px;
   width:1900px;
   background-color: rgb(34, 56, 63);
