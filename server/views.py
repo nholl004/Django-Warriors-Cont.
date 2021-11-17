@@ -66,7 +66,7 @@ def search(request):
         while( x != line_count-1):
             x += 1
             for y in range(8):
-                if(caseList[x][y][0:5] == searched_data or caseList[x][y].lower() == searched_data.lower()):
+                if(caseList[x][y].lower() == searched_data.lower()):
                     data_info.append(caseList[x])
 
     #print(len(data_info))

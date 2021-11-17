@@ -4,11 +4,18 @@
 
     <style type="text/css">
         h1{
-            margin-Left:200px;
+            margin-Left:220px;
+            padding: 0px 10px;
+            position: static;
+            top:85;
+            right:10;
+            text-align: center;
             font-size: 50px;
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
             color: #000000;
             background-color:rgb(217, 246, 255);
+            outline-style: solid;
+            outline-color: rgb(90, 155, 255);
+            padding-top:10px;
         }
 
         body{
@@ -18,11 +25,13 @@
         .sidebar {
             height:100%;
             width:200px;
-            position: fixed;
+            position: absolute;
             z-index:1;
-            top:0;
-            Left:0;
+            top:5;
+            Left:5;
             background-color:rgb(217, 246, 255);
+            outline-style: solid;
+            outline-color: rgb(90, 155, 255);
             overflow-x: :hidden;
             padding-top:10px;
         }
@@ -34,7 +43,9 @@
         }
 
         .sidebar a {
+            margin-Left:20px;
             padding: 1px 1px 1px 8px;
+            width:160px;
             text-decoration: none;
             font-size: 15px;
             color: #ffffff;
@@ -46,9 +57,16 @@
         }
 
         .main{
-            margin-Left:200px;
+            margin-Left:220px;
             padding: 0px 10px;
+            position: static;
+            top:85;
+            right:10;
+            text-align: center;
             background-color:rgb(217, 246, 255);
+            outline-style: solid;
+            outline-color: rgb(90, 155, 255);
+            padding-top:30px;
         }
     </style>
 
@@ -90,7 +108,9 @@
             <a class="btn btn-primary" href="/backup">Backup</a>
             <p>Make sure to import data!</p>
         </form>
-
+        {% if data_info == NULL%}
+            <p>IMPORT</p>
+        {% endif %}
         {% if error%}
             <p> Error: Incorrect info added, please try again!</p>
         {% else %}
@@ -106,23 +126,22 @@
             <a class="btn btn-primary" href="/deaths">Top 10 Deaths</a>
             <p></p>
             <a class="btn btn-primary" href="/recovs">Top 10 Recoveries</a>
-
-            <p>Recovery Rate for each city:</p>
+            <p></p>
+            <a class = "btn btn-primary" href = "/compare">1v1 Comparison</a>
+            <p>__________________________</p>
+            <p>Via city/town:</p>
             <a class = "btn btn-primary" href="/rate">Recovery Rates</a>
 
-            <p>Get a confirmed to death ratio by entering serial number </p>
+            <p>__________________________</p>
             <a class ="btn btn-primary" href="/ConfirmtoDeath">Confirm to Death</a>
 
-            <p>Peak days of confirmed cases, deaths, and recovery. </p>
+            <p>__________________________</p>
             <a class ="btn btn-primary" href="/peakdays">Peak Days</a>
-            
-            <p>Daily Cases for an entire month in a certain location</p>
-            <a class ="btn btn-primary" href="/daily">Daily Cases for an entire month</a>
-
-            <p>Daily Deaths for an entire month in a certain location</p>
-            <a class ="btn btn-primary" href="/dailydeaths">Daily Deaths for an entire month</a>
-
-            <p> Compare 2 Provinces/States: </p>
-            <a class = "btn btn-primary" href = "/compare">Comparison</a>
+            <p>__________________________</p>
+            <p>Daily Stats by month:</p>
+            <a class ="btn btn-primary" href="/daily">Confirmed Daily Cases</a>
+            <p></p>
+            <a class ="btn btn-primary" href="/dailydeaths">Daily Deaths</a>  
+            <p>__________________________</p>       
     </div>
 </body>
