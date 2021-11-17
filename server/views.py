@@ -311,6 +311,7 @@ def confirm_to_death(request):
                 casesDeaths = float(caseList[i][6])
                 if(casesDeaths == 0):
                     casesDeaths = 1
+                # confirmed / deaths
                 ratio = casesConfirmed / casesDeaths
                 context["confirmedCases"] = str(casesConfirmed)
                 context["confirmedDeaths"] = str(casesDeaths)
@@ -325,6 +326,7 @@ def confirm_to_death(request):
       
 # Function shows the recovery rate in each city
 # Confirmed / recovered
+# should be recovered / confirmed (* 100)
 def rec_Rate(request):
 
     global caseList
@@ -334,10 +336,10 @@ def rec_Rate(request):
     rate = 0.0
 
     for line in range(1,len(caseList)-1):
-        if (float(rec_tmp[line][7]) == 0.0):
+        if (float(rec_tmp[line][5]) == 0.0):
             rate = 0.0
         else:
-            tmp = float(caseList[line][5]) / float(caseList[line][7])
+            tmp = (float(caseList[line][7]) / float(caseList[line][5]) * 100)
             rate = "{:.2f}".format(tmp)
         # rec_list[line][0] = rec_tmp[line][2]
         tmp_list.append(caseList[line][2])

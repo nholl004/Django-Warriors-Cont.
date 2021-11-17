@@ -11,7 +11,7 @@
         <a class="btn btn-primary" href="/search">Return</a>
         <p class = "resultTitle">Recovery Rates:</p>
         {% for state,country, recRate in data_info %}
-            <p class = "result"><span class = "descriptions">State: </span>{{state}} , <span class = "descriptions">Country: </span>{{country}} , <span class = "recovery">Recovery Rate: </span>{{recRate}}</p>
+            <p class = "result"><span class = "descriptions">State: </span>{{state}} , <span class = "descriptions">Country: </span>{{country}} , <span class = "recovery">Recovery Rate: </span>{{recRate}}%</p>
         {% endfor %}
     {% endif %}
 </div>
