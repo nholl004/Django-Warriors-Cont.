@@ -294,18 +294,20 @@ def update(request):
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
 def confirm_to_death(request):
+    global caseList
     serialNo = str(request.POST.get('SN'))
-    context = {}
+    contextTmp = []
+    context = []
     if not serialNo:
+        print(3)
         error = True
-        return render(request,'server_view/confirmtodeath.html',{'error':error,'SN':serialNo })
+        return render(request,'server_view/confirmtodeath.html',{'error':error,'data_info': context })
     else:
         error = False
         if(serialNo == 'None'):
             return render(request,'server_view/confirmtodeath.html')
         ratio = -1; 
-    
-        for i in range(1,len(caseList) - 1):
+        for i in range(1, len(caseList) - 1):
             if(int(caseList[i][0]) == int(serialNo)):
                 casesConfirmed = float(caseList[i][5])
                 casesDeaths = float(caseList[i][6])
@@ -313,12 +315,18 @@ def confirm_to_death(request):
                     casesDeaths = 1
                 # confirmed / deaths
                 ratio = casesConfirmed / casesDeaths
-                context["confirmedCases"] = str(casesConfirmed)
-                context["confirmedDeaths"] = str(casesDeaths)
+                # contextTmp.append(float(casesConfirmed))
+                # contextTmp.append(float(casesDeaths))
+                # contextTmp.append(float(ratio))
+                contextTmp.append(casesConfirmed)
+                contextTmp.append(casesDeaths)
+                contextTmp.append(ratio)
                 
-                context["ratio"] = ratio 
+                context.append(contextTmp)
+                # context["confirmedDeaths"] = str(casesDeaths)
+                # context["ratio"] = ratio 
                 print(ratio)
-                return render(request,'server_view/confirmtodeath.html', {'error':error,'SN':serialNo})
+                return render(request,'server_view/confirmtodeath.html', {'data_info':context})
             else:
                 error = True;    
 
@@ -334,21 +342,102 @@ def rec_Rate(request):
     tmp_list = []
     rec_list = []
     rate = 0.0
+    currDay = 1
+
+    recoveredNum = 0
+    recoveredHigh = 0
+    recoveredLow = 0
+    
+    confirmedDenom = 0
+    confirmedHigh = 0
+    confirmedLow = 0
+
+    month = request.POST.get('month')
+    year = request.POST.get('year')
+    state = request.POST.get('location')
 
     for line in range(1,len(caseList)-1):
-        if (float(rec_tmp[line][5]) == 0.0):
-            rate = 0.0
+        splitInput = split_date(caseList[line][1]) # 01/02/2020
+        if (splitInput[1][0] == '0'):
+            tmpDay = int(splitInput[1][1])
         else:
-            tmp = (float(caseList[line][7]) / float(caseList[line][5]) * 100)
-            rate = "{:.2f}".format(tmp)
+            tmpDay = int (splitInput[1])
+        
+        if(splitInput[0] == month and splitInput[2] == year and currDay <= 31 and caseList[line][2] == state):
+            currDay+=1
+            if (splitInput[2] == '2021' and month == '05'):
+                if (tmpDay == 29):
+                    recoveredHigh = float(rec_tmp[line][7])
+                    confirmedHigh = float(rec_tmp[line][5])
+                elif (tmpDay == 1):
+                    recoveredHigh = float(rec_tmp[line][7])
+                    confirmedHigh = float(rec_tmp[line][5])
+            if (month == '01' or month == '03' or month == '05' or month == '07' or month == '08' or month == '10' or month == '12'):
+                if (tmpDay == 31):
+                    recoveredHigh = float(rec_tmp[line][7])
+                    confirmedHigh = float(rec_tmp[line][5])
+                elif (tmpDay == 1):
+                    recoveredLow = float(rec_tmp[line][7])
+                    confirmedHigh = float(rec_tmp[line][5])
+            if (month == '02'):
+                if (tmpDay == 28 or tmpDay == 29):
+                    recoveredHigh = float(rec_tmp[line][7])
+                    confirmedHigh = float(rec_tmp[line][5])
+                elif (tmpDay == 1):
+                    recoveredLow = float(rec_tmp[line][7])
+                    confirmedHigh = float(rec_tmp[line][5])
+            if (month == '04' or month == '06' or month == '09' or month == '11'):
+                if (tmpDay == 30):
+                    recoveredHigh = float(rec_tmp[line][7])
+                    confirmedHigh = float(rec_tmp[line][5])
+                elif (tmpDay == 1):
+                    recoveredLow = float(rec_tmp[line][7])
+                    confirmedHigh = float(rec_tmp[line][5])
+    
+    recoveredNum = recoveredHigh - recoveredLow
+    confirmedDenom = confirmedHigh - confirmedLow
+            
+    if (confirmedDenom == 0.0):
+        rate = 0.0
+    else:
+        tmp = (recoveredNum / confirmedDenom) * 100
+        rate = "{:.2f}".format(tmp)
         # rec_list[line][0] = rec_tmp[line][2]
-        tmp_list.append(caseList[line][2])
-        tmp_list.append(caseList[line][3])
-        tmp_list.append(rate)
-        rec_list.append(tmp_list)
-        tmp_list = []
+        
+    tmp_list.append(state) #state/province
+    tmp_list.append(rate)
+    rec_list.append(tmp_list)
+    # print(tmp_list[])
+    tmp_list = []
 
     return render(request, 'server_view/recRate.html',{'data_info':rec_list})
+
+# deaths / (deaths + recovered) * 100 <- refers to ongoing epidemic
+# nonongoing cfr is deaths / confirmed * 100 
+# case fatality ratio is the proportion of individuals diagnosed with a disease who die from that disease and is therefore a measure of severity among detected cases
+def caseFatalityRatio(request):
+    
+    global caseList
+    case_tmp = caseList
+    rate = 0.0
+    newList = []
+    ratioList = []
+
+    for i in range (1, len(case_tmp) - 1):
+        if (float(caseList[i][6]) + float (caseList[i][7]) == 0):
+            ratio = 0.0
+        else:
+            ratioTmp = ((float(caseList[i][6]) / (float(caseList[i][6]) + float(caseList[i][7]))) * 100)
+            ratio = "{:.2f}".format(ratioTmp)
+
+        newList.append(caseList[i][2])
+        newList.append(caseList[i][3])
+        newList.append(ratio)
+        ratioList.append(newList)
+        newList = [] #empty list for next iteration
+
+    return render(request, 'server_view/caseFatality.html', {'data_info': ratioList})
+    
 
 def daily_cases(request):
     #sort the cases of a certain location and month
