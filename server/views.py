@@ -85,27 +85,28 @@ def search(request):
 def top_cases(request):
     global caseList
     tmp = caseList
-    list = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
-    ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
-    ,[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]
-    ,[0,0,0,0,0,0,0,0]]
+    list = []
     conf = []
     prov = []
 
     for i in range(1,len(tmp)): 
         k =0
         if(tmp[i][2] != ''):
-            for j in range(0,10): # checks to make sure no duplicate states. Takes the greatest value.  
-                for x in range(0,10):
-                    if(list[j][2]==list[x][2]):
-                        if(float(list[j][5])<float(list[x][5])):
-                            list.pop(j)
-                            list.append([0,0,0,0,0,0,0,0])
-            for l in range(0,10):#finds the lowest value
-                if(float(list[l][5])<=float(list[k][5])):
-                    k = l 
-            if(float(list[k][5])<float(tmp[i][5])):#pops lowest value if new found value is greater
-                list.pop(k)
+            if(len(list)==10):
+                for j in range(0,10): # checks to make sure no duplicate states. Takes the greatest value.  
+                    for x in range(0,10):
+                        if(list[j][2]==list[x][2]):
+                            if(float(list[j][5])<float(list[x][5])):
+                                list.pop(j)                               
+                            if(float(list[j][5])==float(list[x][5])):
+                                list.pop(j)                               
+                for l in range(0,10):#finds the lowest value
+                    if(float(list[l][5])<=float(list[k][5])):
+                        k = l 
+                if(float(list[k][5])<float(tmp[i][5])):#pops lowest value if new found value is greater
+                    list.pop(k)
+                    list.append(tmp[i])
+            else:
                 list.append(tmp[i])
     for fill in list:#fills values for graph
         conf.append(fill[5])
