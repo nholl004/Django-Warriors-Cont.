@@ -9,7 +9,7 @@
         <a class="btn btn-primary" href="/search">Return</a>
     {% else %}
         <a class="btn btn-primary" href="/search">Return</a>
-        <p class = "resultTitle">Recovery Rates:</p>
+        <p class = "resultTitle">Case Fatality Ratio:</p>
         {% for state,country, CaseFatalityRatio in data_info %}
             <p class = "result"><span class = "descriptions">State: </span>{{state}} , <span class = "descriptions">Country: </span>{{country}} , <span class = "recovery">Case Fatality Ratio: </span>{{CaseFatalityRatio}}%</p>
         {% endfor %}

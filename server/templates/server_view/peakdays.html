@@ -4,7 +4,7 @@
     <link rel="stylesheet" href= "{% static 'server_view/recoverydeathpeak.css' %}">
 </head>
 
-<div class = "peakDaysResult">
+<body class = "peakDaysResult">
     <h1>Peak Days Date</h1>
     <form method='POST'> {% csrf_token %}
         <a class="btn btn-primary" href="/search">Click to go back</a>
@@ -21,4 +21,4 @@
     <p>Number of death cases: {{deathCaseDate}}</p>
     <p>Date of the Highest Peak of Recovered Cases: {{recoveredCase}} </p>
     <p>Number of recovered cases: {{recoveredCaseDate}}</p>
-</div>
+</body>

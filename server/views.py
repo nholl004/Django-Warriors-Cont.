@@ -91,27 +91,44 @@ def top_cases(request):
     ,[0,0,0,0,0,0,0,0]]
     conf = []
     prov = []
+    count = 0
+    # stateList = []
 
-    for i in range(1,len(tmp)): 
+    for i in range(1,len(tmp) - 1): 
         k =0
         if(tmp[i][2] != ''):
-            for j in range(0,10): # checks to make sure no duplicate states. Takes the greatest value.  
-                for x in range(0,10):
-                    if(list[j][2]==list[x][2]):
-                        if(float(list[j][5])<float(list[x][5])):
-                            list.pop(j)
-                            list.append([0,0,0,0,0,0,0,0])
-            for l in range(0,10):#finds the lowest value
-                if(float(list[l][5])<=float(list[k][5])):
-                    k = l 
-            if(float(list[k][5])<float(tmp[i][5])):#pops lowest value if new found value is greater
-                list.pop(k)
-                list.append(tmp[i])
+            if (count > 1):
+                for j in range(0,10): # checks to make sure no duplicate states. Takes the greatest value.  
+                    for x in range(0,10):
+                        if(list[j][2]==list[x][2]):
+                            if(float(list[j][5])> float(list[x][5])):                   
+                                list.pop(x)
+                                list.append([0,0,0,0,0,0,0,0])
+                            if(float(list[j][0])> float(list[x][0])):                   
+                                list.pop(x)
+                                list.append([0,0,0,0,0,0,0,0])
+        else: 
+            continue
+                            
+        for l in range(0,10):#finds the lowest value
+            if(float(list[l][5]) < float(list[k][5])):
+                k = l 
+        if(float(list[k][5])<=float(tmp[i][5])):#pops lowest value if new found value is greater
+            list.pop(k)
+            list.append(tmp[i])
+            #     stateList.append(tmp[i][2])
+            # for state in stateList: 
+            #     if (state != tmp[i][2]):
+            #         list.pop(k)
+            #         list.append(tmp[i])
+            #         stateList.append(tmp[i][2])
+        count += 1
+
     for fill in list:#fills values for graph
         conf.append(fill[5])
         prov.append(fill[2])
     return render(request, 'server_view/top_cases.html',{'data_info':list,
-    'conf':conf,'prov':prov})    
+    'conf':conf,'prov':prov})  
 
 def top_deaths(request):
     global caseList
