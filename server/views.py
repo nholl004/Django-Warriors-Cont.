@@ -88,7 +88,7 @@ def top_cases(request):
     list = []
     conf = []
     prov = []
-    
+
     for i in range(1,len(tmp)): 
         k =0
         k1 = 0
@@ -116,14 +116,13 @@ def top_cases(request):
                     if(k1 == 1):
                         list.append(tmp[i])
                     elif(k1_2cnt == 1):
-                        list[k] = tmp[i]
-        
+                        list[k] = tmp[i]       
 
     for fill in list:#fills values for graph
         conf.append(fill[5])
         prov.append(fill[2])
     return render(request, 'server_view/top_cases.html',{'data_info':list,
-    'conf':conf,'prov':prov})    
+    'conf':conf,'prov':prov})  
 
 def top_deaths(request):
     global caseList
