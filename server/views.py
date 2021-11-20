@@ -5,56 +5,20 @@ from django.http import JsonResponse
 
 from .forms import serverForm
 from .models import search
+from server import viewsFunctions
 # Create your views here.
 
 caseList = [[]]
-line_count = 0
-import_cnt = 0
 def importButton(request):
-    global import_cnt
+    viewsFunctions.test()
     importFunction()
     return render(request, 'server_view/import.html')
 
 def importFunction():
-    global line_count 
     global caseList
-
-    tmp_list = [[]]
-    csv_file = open("covid_19_data.csv")
-    
-    for line in csv_file:
-        infoList = []
-        infoList = line.split(',')
-        tmp = []
-        tmp1 = []
-        new_line = ''
-        if(len(infoList)>8):#fixes provice split issue
-            tmp = infoList[2:len(infoList)-5]
-            for x in range(len(tmp)):
-                new_line += tmp[x]
-                if(x < len(tmp)-1):
-                    new_line += ', '
-            #print(tmp,new_line)
-            tmp1.append(infoList[0])
-            tmp1.append(infoList[1])
-            tmp1.append(new_line)
-            tmp1.append(infoList[(len(infoList)-5)])
-            tmp1.append(infoList[(len(infoList)-4)])
-            tmp1.append(infoList[(len(infoList)-3)])
-            tmp1.append(infoList[(len(infoList)-2)])
-            tmp1.append(infoList[(len(infoList)-1)])
-            infoList = tmp1
-
-        tmp_list.append(infoList)
-        # print(infoList)
-        line_count += 1
-    tmp_list.pop(0)
-    caseList = tmp_list
-    print('case size:',len(caseList))
-print('case size:',len(caseList))
+    caseList = viewsFunctions.importFunc()
 
 def search(request):
-    global line_count 
     global caseList
 
     searched_data = request.POST.get('search')
@@ -63,7 +27,7 @@ def search(request):
     data_info = [[]]
     #print(data_info)
     if (searched_data != None):
-        while( x != line_count-1):
+        while( x != len(caseList)-1):
             x += 1
             for y in range(8):
                 if(caseList[x][y].lower() == searched_data.lower()):
@@ -84,39 +48,10 @@ def search(request):
 
 def top_cases(request):
     global caseList
-    tmp = caseList
-    list = []
-    conf = []
-    prov = []
 
-    for i in range(1,len(tmp)): 
-        k =0
-        k1 = 0
-        k1_2cnt = 0
-        if(tmp[i][2] != ''):
-            if(len(list)==0):
-                list.append(tmp[i])
-            else:
-                cnt = 0
-                for x in range(0,len(list)):
-                    if(list[x][2]==tmp[i][2]):
-                        cnt +=1
-                        if(float(list[x][5])<=float(tmp[i][5])):
-                            list[x] = tmp[i]
-                if(cnt == 0):
-                    for l in range(0,len(list)):
-                        if(len(list)==10):                          
-                            if(float(list[l][5])<=float(tmp[i][5])):
-                                k = l  
-                                k1_2cnt = 1      
-                            else:
-                                k1 = 2                       
-                        elif(len(list)<10):
-                            k1 = 1
-                    if(k1 == 1):
-                        list.append(tmp[i])
-                    elif(k1_2cnt == 1):
-                        list[k] = tmp[i]       
+    conf = []
+    prov = []      
+    list = viewsFunctions.top10(5, caseList)
 
     for fill in list:#fills values for graph
         conf.append(fill[5])
@@ -126,82 +61,25 @@ def top_cases(request):
 
 def top_deaths(request):
     global caseList
-    tmp = caseList
-    list = []
+
     deaths = []
     prov = []
+    list = viewsFunctions.top10(6, caseList)
 
-    for i in range(1,len(tmp)): 
-        k =0
-        k1 = 0
-        k1_2cnt = 0
-        if(tmp[i][2] != ''):
-            if(len(list)==0):
-                list.append(tmp[i])
-            else:
-                cnt = 0
-                for x in range(0,len(list)):
-                    if(list[x][2]==tmp[i][2]):
-                        cnt +=1
-                        if(float(list[x][6])<=float(tmp[i][6])):
-                            list[x] = tmp[i]
-                if(cnt == 0):
-                    for l in range(0,len(list)):
-                        if(len(list)==10):                          
-                            if(float(list[l][6])<=float(tmp[i][6])):
-                                k = l  
-                                k1_2cnt = 1      
-                            else:
-                                k1 = 2                       
-                        elif(len(list)<10):
-                            k1 = 1
-                    if(k1 == 1):
-                        list.append(tmp[i])
-                    elif(k1_2cnt == 1):
-                        list[k] = tmp[i]
     for fill in list:#fills values for graph
         deaths.append(fill[6])
         prov.append(fill[2])
-    #print(list)
     return render(request, 'server_view/top_deaths.html',{'data_info':list,
     'deaths':deaths,'prov':prov})    
 
 
 def top_recov(request):
     global caseList
-    tmp = caseList
-    list = []
+
     recov = []
     prov = []
+    list = viewsFunctions.top10(7, caseList)
 
-    for i in range(1,len(tmp)): 
-        k =0
-        k1 = 0
-        k1_2cnt = 0
-        if(tmp[i][2] != ''):
-            if(len(list)==0):
-                list.append(tmp[i])
-            else:
-                cnt = 0
-                for x in range(0,len(list)):
-                    if(list[x][2]==tmp[i][2]):
-                        cnt +=1
-                        if(float(list[x][7])<=float(tmp[i][7])):
-                            list[x] = tmp[i]
-                if(cnt == 0):
-                    for l in range(0,len(list)):
-                        if(len(list)==10):                          
-                            if(float(list[l][7])<=float(tmp[i][7])):
-                                k = l  
-                                k1_2cnt = 1      
-                            else:
-                                k1 = 2                       
-                        elif(len(list)<10):
-                            k1 = 1
-                    if(k1 == 1):
-                        list.append(tmp[i])
-                    elif(k1_2cnt == 1):
-                        list[k] = tmp[i]
     for fill in list:#fills values for graph
         recov.append(fill[7])
         prov.append(fill[2])
