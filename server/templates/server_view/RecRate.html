@@ -8,15 +8,15 @@
     <form method='POST'> {% csrf_token %}
         <a class="btn btn-primary" href="/search">Return</a>
         <h1>Recovery Rate of a Month</h1>
-        <div style = "font-size: 18px;">
+        <body class = "input">
             <p>Month:("mm" format)  <input type="text" name="month"></p>
             <p>Year: ("yyyy" format) <input type="text" name ="year"></p>
             <p>Province/State: <input type="text" name="location"></p>
             <button type='submit'>Submit</button>
             <p class = "resultTitle">Recovery Rate:</p>
-            {% for state, recRate in data_info %}
-                <p class = "peakDaysResult"><span class = "descriptions">State: </span>{{state}} <span class = "recovery">Recovery Rate: </span>{{recRate}}%</p>
+            {% for month, year, state, recRate in data_info %} 
+                <p class = "peakDaysResult"><span class = "descriptions"> Month: </span>{{month}}<span class = "descriptions"> Year: </span>{{year}}<span class = "descriptions"> State: </span>{{state}} <span class = "recovery">Recovery Rate: </span>{{recRate}}%</p>
             {% endfor %}
-        </div>
+        </body>
     </form>
 </body>
