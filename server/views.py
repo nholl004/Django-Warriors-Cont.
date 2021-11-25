@@ -9,14 +9,18 @@ from server import viewsFunctions
 # Create your views here.
 
 caseList = [[]]
-def importButton(request):
-    viewsFunctions.test()
-    importFunction()
-    return render(request, 'server_view/import.html')
+listC = []
+listD = []
+listR = []
+sumC = 0 
+sumD = 0 
+sumR = 0
 
-def importFunction():
+def importButton(request):
     global caseList
+    viewsFunctions.test()
     caseList = viewsFunctions.importFunc()
+    return render(request, 'server_view/import.html')
 
 def search(request):
     global caseList
@@ -47,46 +51,57 @@ def search(request):
         'data_info':data_info,'error':error})
 
 def top_cases(request):
-    global caseList
+    global caseList, listC, listD, listR, sumC, sumD, sumR
 
-    conf = []
-    prov = []      
-    list = viewsFunctions.top10(5, caseList)
+    conf= [] 
+    provC= [] 
+    death= [] 
+    provD= [] 
+    recov= [] 
+    provR = []
 
-    for fill in list:#fills values for graph
-        conf.append(fill[5])
-        prov.append(fill[2])
-    return render(request, 'server_view/top_cases.html',{'data_info':list,
-    'conf':conf,'prov':prov})  
-
-def top_deaths(request):
-    global caseList
-
-    deaths = []
-    prov = []
-    list = viewsFunctions.top10(6, caseList)
-
-    for fill in list:#fills values for graph
-        deaths.append(fill[6])
-        prov.append(fill[2])
-    return render(request, 'server_view/top_deaths.html',{'data_info':list,
-    'deaths':deaths,'prov':prov})    
-
-
-def top_recov(request):
-    global caseList
-
-    recov = []
-    prov = []
-    list = viewsFunctions.top10(7, caseList)
-
-    for fill in list:#fills values for graph
-        recov.append(fill[7])
-        prov.append(fill[2])
-
-    return render(request, 'server_view/top_recov.html',{'data_info':list,
-    'recov':recov,'prov':prov})    
-
+    if not listC or not listD or not listR:
+        listC = viewsFunctions.top10(5, caseList)
+        listD = viewsFunctions.top10(6, caseList)
+        listR = viewsFunctions.top10(7, caseList)
+        sumC = viewsFunctions.caseTotal(5,caseList)
+        sumD = viewsFunctions.caseTotal(6,caseList)
+        sumR = viewsFunctions.caseTotal(7,caseList)
+        print("Testing cache check",sumC, sumD, sumR)
+    
+    topsumC=0
+    topsumD=0
+    topsumR=0
+    for f in range(len(listC)):#fills values for graph
+        conf.append(listC[f][5])
+        topsumC += float(listC[f][5])
+        provC.append(listC[f][2])
+        death.append(listD[f][6])
+        topsumD += float(listD[f][5])
+        provD.append(listD[f][2])
+        recov.append(listR[f][7])
+        topsumR += float(listR[f][5])
+        provR.append(listR[f][2])
+    print("Testing sums: ",topsumC,topsumD,topsumR)
+    top10C_impact=str(round((topsumC/sumC)*100,2)) + '%'
+    top10D_impact=str(round((topsumD/sumD)*100,2)) + '%'
+    top10R_impact=str(round((topsumR/sumR)*100,2)) + '%'
+    print(top10C_impact, top10D_impact,top10R_impact)
+    context = {
+        'dataC':listC,
+        'conf':conf,
+        'provC':provC,
+        'dataD':listD,
+        'death':death,
+        'provD':provD,
+        'dataR':listR,
+        'recov':recov,
+        'provR':provR,
+        'cImpact':top10C_impact,
+        'dImpact':top10D_impact,
+        'rImpact':top10R_impact,
+    }
+    return render(request, 'server_view/top_cases.html',context)  
 
 def backup(request):
     #make a copy of current data 

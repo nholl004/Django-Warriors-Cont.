@@ -1,11 +1,90 @@
-.result {
-    font-size: 12px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: #1d364e;
-    position: relative;
-    background-color: rgb(217, 246, 255);
-    text-align: left;
+.result1{
+    height:100%;
+    width:700px;
+    position: absolute;
+    Left:5;
+    padding-top:10px;
 }
-.resultTitle {
-    font-size: 25px;
+.result2{
+    height:100%;
+    width:700px;
+    position: absolute;
+    top:360;
+    Left:5;
+}
+.result3{
+    height:100%;
+    width:700px;
+    position: absolute;
+    top:710;
+    Left:5;
+}
+.DataOut1{
+    margin-Left:700px;
+    padding: 0px 10px;
+    height:100%;
+    width:750px;
+    position: absolute;
+    font-weight: lighter;
+    padding-top:10px;
+}
+.DataOut1 p{
+    list-style-type: none;
+    margin: 5;
+    padding: 0;
+    display: flex;
+}
+.DataOut1 h1{
+    list-style-type: none;
+    margin: 5;
+    padding: 0;
+    display: flex;
+    font-weight: normal;
+    font-size: 18px;
+}
+.DataOut2{
+    margin-Left:700px;
+    padding: 0px 10px;
+    height:100%;
+    width:750px;
+    position: absolute;
+    font-weight: lighter;
+    top:360
+}
+.DataOut2 p{
+    list-style-type: none;
+    margin: 5;
+    padding: 0;
+    display: flex;
+}
+.DataOut2 h1{
+    list-style-type: none;
+    margin: 5;
+    padding: 0;
+    display: flex;
+    font-weight: normal;
+    font-size: 18px;
+}
+.DataOut3{
+    margin-Left:700px;
+    padding: 0px 10px;
+    height:100%;
+    width:750px;
+    position: absolute;
+    font-weight: lighter;
+    top:710
+}
+.DataOut3 p{
+    list-style-type: none;
+    margin: 5;
+    padding: 0;
+    display: flex;
+}
+.DataOut3 h1{
+    list-style-type: none;
+    margin: 5;
+    padding: 0;
+    display: flex;
+    font-weight: normal;
+    font-size: 18px;
 }

@@ -39,7 +39,8 @@ def top10(data_position,database_list):
         k =0
         k1 = 0
         k1_2cnt = 0
-        if(database_list[i][2] != ''):
+        
+        if(database_list[i][2] != '' and database_list[i][2] != 'Recovered'):
             if(len(list)==0):
                 list.append(database_list[i])
             else:
@@ -64,3 +65,27 @@ def top10(data_position,database_list):
                     elif(k1_2cnt == 1):
                         list[k] = database_list[i]
     return list
+    
+def caseTotal(data_position,database_list):
+    sum = 0
+    list = []
+    for i in range(1,len(database_list)):
+        if(database_list[i][2] != ''):
+            if(sum == 0):
+                sum += float(database_list[i][data_position])
+                list.append(database_list[i])
+            else:
+                k = 0
+                for x in range(1,len(list)):
+                    if(list[x][2]==database_list[i][2] and float(list[x][data_position]) <= float(database_list[i][data_position])):
+                        sum -= float(list[x][data_position])
+                        sum += float(database_list[i][data_position])
+                    
+                        k = x
+                if(k == 0):
+                    sum += float(database_list[i][data_position]) 
+                else:
+                    list.append(database_list[i]) 
+                    list.pop(k)
+
+    return sum
