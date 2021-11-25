@@ -1,62 +1,422 @@
 {% load static %}
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <link rel="stylesheet" href= "{% static 'server_view/topCSS.css' %}">
-</head>
-<div class = "result">
-  <canvas id="topCases"></canvas>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // === include 'setup' then 'config' above ===
-    const data = {
-        labels: [{%for data in prov%}'{{data}}',{%endfor%}],
-        datasets: [{
-            label: 'Highest confirmed cases per Province/State',
-            backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(255, 205, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(201, 203, 207, 0.2)'
-            ],
-            borderColor: [
-            'rgb(255, 99, 132)',
-            'rgb(255, 159, 64)',
-            'rgb(255, 205, 86)',
-            'rgb(75, 192, 192)',
-            'rgb(54, 162, 235)',
-            'rgb(153, 102, 255)',
-            'rgb(201, 203, 207)'
-            ],
-            data: [{%for data in conf%}{{data}},{%endfor%}],
-        }]
-    };
-    const config = {
-        type: 'bar',
-        data: data,
-        options: {
-            indexAxis: 'y',
+    <style>
+        .main{
+            background: #BAB099;
         }
-    };
-    const myChart = new Chart(
-        document.getElementById('topCases'),
-        config
-    );
-</script>
+        a {
+            height:35px;
+            width:80px;
+            position: absolute;
+            top:1220;
+            Left:20;
+            border-radius: 20px;
+            box-shadow: 3px 3px 3px #585858;
+            padding: 0px 20px 20px 10px;
+        }
+        .r1 h1{
+            height:35px;
+            width:555px;
+            position: absolute;
+            Left:40;
+            border: 1px solid #000000;
+            border-radius: 20px;
+            box-shadow: 3px 3px 3px #585858;
+            top:35px;
+            padding: 5px 5px 5px 10px;
+            background-image: -webkit-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -moz-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -o-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: linear-gradient(left, #E6E5CA, #ffffff);
+            font-size: 21px;
+            z-index: 1;
+        }
+        .r2 h1{
+            height:35px;
+            width:555px;
+            position: absolute;
+            Left:40;
+            border: 1px solid #000000;
+            border-radius: 20px;
+            box-shadow: 3px 3px 3px #585858;
+            top:430px;
+            padding: 5px 5px 5px 10px;
+            background-image: -webkit-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: -moz-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: -o-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: linear-gradient(right, #E6E5CA, #ffffff);
+            font-size: 21px;
+            z-index: 1;
+        }
+        .r3 h1{
+            height:35px;
+            width:555px;
+            position: absolute;
+            Left:40;
+            border: 1px solid #000000;
+            border-radius: 20px;
+            box-shadow: 3px 3px 3px #585858;
+            top:825px;
+            padding: 5px 5px 5px 10px;
+            background-image: -webkit-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -moz-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -o-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: linear-gradient(left, #E6E5CA, #ffffff);
+            font-size: 21px;
+            z-index: 1;
+        }
+        .result1{
+            height:370px;
+            width:765px;
+            position: absolute;
+            Left:20;
+            border: 1px solid #000000;
+            border-radius: 20px;
+            box-shadow: 3px 3px 3px #585858;
+            top:50px;
+            padding: 0px 20px 20px 10px;
+            background-image: -webkit-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: -moz-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: -o-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: linear-gradient(right, #E6E5CA, #ffffff);
+        }
+        .result2{
+            height:370px;
+            width:765px;
+            position: absolute;
+            top:445;
+            Left:20;
+            border: 1px solid #000000;
+            border-radius: 20px;
+            box-shadow: 3px 3px 3px #585858;
+            padding: 0px 20px 20px 10px;
+            background-image: -webkit-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -moz-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -o-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: linear-gradient(left, #E6E5CA, #ffffff);
+        }
+        .result3{
+            height:370px;
+            width:765px;
+            position: absolute;
+            top:840;
+            Left:20;
+            border: 1px solid #000000;
+            border-radius: 20px;
+            box-shadow: 3px 3px 3px #585858;
+            padding: 0px 20px 20px 10px;
+            background-image: -webkit-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: -moz-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: -o-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: linear-gradient(right, #E6E5CA, #ffffff);
+        }
+        .DataOut1{
+            margin-Left:800px;
+            height:390px;
+            width:960px;
+            position: absolute;
+            font-weight: lighter;
+            top:30;
+            background-image: -webkit-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -moz-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -o-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: linear-gradient(left, #E6E5CA, #ffffff);
+            border: 3px solid #000000;
+            box-shadow: 3px 3px 3px #585858;
+            border-radius: 20px;
+            padding: 15px 20px 20px 20px;
+        }
+        .DataOut1 p{
+            list-style-type: none;
+            border: 1px solid #000000;
+            margin: 2;
+            padding: 0;
+            display: flex;
+            font-size:18px;
+        }
+        .DataOut2{
+            margin-Left:800px;
+            height:390px;
+            width:960px;
+            position: absolute;
+            font-weight: lighter;
+            top:425;
+            background-image: -webkit-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: -moz-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: -o-linear-gradient(right, #E6E5CA, #ffffff);
+            background-image: linear-gradient(right, #E6E5CA, #ffffff);
+            border: 3px solid #000000;
+            box-shadow: 3px 3px 3px #585858;
+            border-radius: 20px;
+            padding: 13px 20px 20px 20px;
+        }
+        .DataOut2 p{
+            list-style-type: none;
+            border: 1px solid #000000;
+            margin: 2;
+            padding: 0;
+            display: flex;
+            font-size:18px;
+        }
+        .DataOut3{
+            margin-Left:800px;
+            height:390px;
+            width:960px;
+            position: absolute;
+            font-weight: lighter;
+            top:822;
+            background-image: -webkit-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -moz-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: -o-linear-gradient(left, #E6E5CA, #ffffff);
+            background-image: linear-gradient(left, #E6E5CA, #ffffff);
+            border: 3px solid #000000;
+            box-shadow: 3px 3px 3px #585858;
+            border-radius: 20px;
+            padding: 13px 20px 20px 20px;
+        }
+        .DataOut3 p{
+            list-style-type: none;
+            border: 1px solid #000000;
+            margin: 2;
+            padding: 0;
+            display: flex;
+            font-size:18px;
+        }
+        .analytic1{
+            font-weight: normal;
+        }
+        .analytic1 p{
+            height:30px;
+            width:210px;
+            position: absolute;
+            text-align: center;
+            Left:550;
+            top:365px;
 
+            border: 1px solid #000000;
+            border-radius: 10px;
+            box-shadow: 3px 3px 3px #585858;
+            z-index: 1;
+        }
+        .analytic2{
+            font-weight: normal;
+        }
+        .analytic2 p{
+            height:30px;
+            width:210px;
+            position: absolute;
+            text-align: center;
+            Left:550;
+            top:760px;
 
-<div class = "result">
-    {% if error%}
-        <p> Error: File was not imported!</p>
-        <a class="btn btn-primary" href="/search">Return</a>
-    {% else %}
-        <p class = "resultTitle">Most cases found in these provinces/states:</p>
-        {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
-            <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
-        {% endfor %}
-        <a class="btn btn-primary" href="/search">Return</a>
-    {% endif %}
-</div>
+            border: 1px solid #000000;
+            border-radius: 10px;
+            box-shadow: 3px 3px 3px #585858;
+            z-index: 1;
+        }
+        .analytic3{
+            font-weight: normal;
+        }
+        .analytic3 p{
+            height:30px;
+            width:210px;
+            position: absolute;
+            text-align: center;
+            Left:550;
+            top:1155px;
+
+            border: 1px solid #000000;
+            border-radius: 10px;
+            box-shadow: 3px 3px 3px #585858;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body id="bg" style="background-image: url('{% static "/img/forest4.jpg"%}');background-size: 3840px 2160px;background-repeat: no-repeat;">
+    <div class = "r1">
+        <h1>Highest 10 Confirmed cases per Province/State</h1>
+        <div class = "result1">
+            <canvas id="topConfirms"></canvas>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // === include 'setup' then 'config' above ===
+            const data = {
+                labels: [{%for data in provC%}'{{data}}',{%endfor%}],
+                datasets: [{
+                    label: 'Highest confirmed cases per Province/State',
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                    ],
+                    borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                    ],
+                    data: [{%for data in conf%}{{data}},{%endfor%}],
+                }]
+            };
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    indexAxis: 'y',
+                }
+            };
+            const confirms = new Chart(
+                document.getElementById('topConfirms'),
+                config
+            );
+        </script>
+    </div>
+    <div class = "r2">
+        <h1>Highest 10 Death cases per Province/State</h1>
+        <div class = "result2">
+            <canvas id="topDeaths"></canvas>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // === include 'setup' then 'config' above ===
+            const data2 = {
+                labels: [{%for data2 in provD%}'{{data2}}',{%endfor%}],
+                datasets: [{
+                    label: 'Highest Death cases per Province/State',
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                    ],
+                    borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                    ],
+                    data: [{%for data2 in death%}{{data2}},{%endfor%}],
+                }]
+            };
+            const config2 = {
+                type: 'bar',
+                data: data2,
+                options: {
+                    indexAxis: 'y',
+                }
+            };
+            const deaths = new Chart(
+                document.getElementById('topDeaths'),
+                config2
+            );
+        </script>
+    </div>
+    <div class = "r3">
+        <h1>Highest 10 Recovery cases per Province/State</h1>
+        <div class = "result3">
+            <canvas id="topRecov"></canvas>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // === include 'setup' then 'config' above ===
+            const data3 = {
+                labels: [{%for data3 in provR%}'{{data3}}',{%endfor%}],
+                datasets: [{
+                    label: 'Highest Recovery cases per Province/State',
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                    ],
+                    borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                    ],
+                    data: [{%for data3 in recov%}{{data3}},{%endfor%}],
+                }]
+            };
+            const config3 = {
+                type: 'bar',
+                data: data3,
+                options: {
+                    indexAxis: 'y',
+                }
+            };
+            const recovs = new Chart(
+                document.getElementById('topRecov'),
+                config3
+            );
+        </script>
+    </div>
+    <div class="analytic1">
+        <p>Impact vs. world: {{cImpact}}<p>
+    </div>
+    <div class="analytic2">
+        <p>Impact vs. world: {{dImpact}}<p>
+    </div>
+    <div class="analytic3">
+        <p>Impact vs. world: {{rImpact}}<p>
+    </div>
+    <div class = "DataOut1">
+        {% if error%}
+            <p> Error: File was not imported!</p>
+            <a class="btn btn-primary" href="/search">Return</a>
+        {% else %}
+            <p>SEARCH NUMBER-|-STATE/PROVINCE,COUNTRY-|-LAST UPDATED-|-CONFIRM-|-DEATHS-|-RECOVERIES</p>
+            {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in dataC %}
+                <p>{{SNo}} | {{state}} | {{country}} | {{lastUp}} | {{confirm}} | {{deaths}} | {{recover}}</p>
+            {% endfor %}
+            
+        {% endif %}
+    </div>
+    <div class = "DataOut2">
+        {% if error%}
+            <p> Error: File was not imported!</p>
+            <a class="btn btn-primary" href="/search">Return</a>
+        {% else %}
+            <p>SEARCH NUMBER-|-STATE/PROVINCE,COUNTRY-|-LAST UPDATED-|-CONFIRM-|-DEATHS-|-RECOVERIES</p>
+            {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in dataD %}
+                <p>{{SNo}} | {{state}} | {{country}} | {{lastUp}} | {{confirm}} | {{deaths}} | {{recover}}</p>
+            {% endfor %}
+            
+        {% endif %}
+    </div>
+    <div class = "DataOut3">
+        {% if error%}
+            <p> Error: File was not imported!</p>
+            <a class="btn btn-primary" href="/search">Return</a>
+        {% else %}
+            <p>SEARCH NUMBER-|-STATE/PROVINCE,COUNTRY-|-LAST UPDATED-|-CONFIRM-|-DEATHS-|-RECOVERIES</p>
+            {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in dataR %}
+                <p>{{SNo}} | {{state}} | {{country}} | {{lastUp}} | {{confirm}} | {{deaths}} | {{recover}}</p>
+            {% endfor %}
+            
+        {% endif %}
+    </div>
+
+    <a class="btn btn-primary" href="/search">Return</a>
+</body>

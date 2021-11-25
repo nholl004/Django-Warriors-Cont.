@@ -30,8 +30,6 @@ urlpatterns = [
     path('update',views.update),
     path('import',views.importButton),
     path('cases',views.top_cases),
-    path('deaths',views.top_deaths),
-    path('recovs',views.top_recov),
     path('ConfirmtoDeath',views.confirm_to_death),
     path('rate',views.rec_Rate),
     path('peakdays', views.peakdays),
