@@ -6,9 +6,14 @@ from django.http import JsonResponse
 from .forms import serverForm
 from .models import search
 from server import viewsFunctions
+import time
 # Create your views here.
 
 caseList = [[]]
+recList = []
+confList = []
+caseFatList = []
+
 def importButton(request):
     viewsFunctions.test()
     importFunction()
@@ -204,9 +209,11 @@ def update(request):
 
 def confirm_to_death(request):
     global caseList
+    global confList
     serialNo = str(request.POST.get('SN'))
     contextTmp = []
     context = []
+    start = time.time()
     if not serialNo:
         print(3)
         error = True
@@ -216,6 +223,13 @@ def confirm_to_death(request):
         if(serialNo == 'None'):
             return render(request,'server_view/confirmtodeath.html')
         ratio = -1; 
+        for line in confList:
+            if (serialNo == line[0]):
+                contextTmp = line
+                context.append(contextTmp)
+                incFinish = time.time() - start
+                print("incremental time (for confirm_to_death): ", incFinish)
+                return render(request,'server_view/confirmtodeath.html', {'data_info':context})
         for i in range(1, len(caseList) - 1):
             if(int(caseList[i][0]) == int(serialNo)):
                 casesConfirmed = float(caseList[i][5])
@@ -227,28 +241,50 @@ def confirm_to_death(request):
                 # contextTmp.append(float(casesConfirmed))
                 # contextTmp.append(float(casesDeaths))
                 # contextTmp.append(float(ratio))
+                contextTmp.append(serialNo)
                 contextTmp.append(casesConfirmed)
                 contextTmp.append(casesDeaths)
                 contextTmp.append(ratio)
                 
                 context.append(contextTmp)
+                incremental(2,context[0])
                 # context["confirmedDeaths"] = str(casesDeaths)
                 # context["ratio"] = ratio 
-                print(ratio)
+                timer = time.time() - start
+                print("Non-Incremental Time (for confirm_to_death): ", timer)
                 return render(request,'server_view/confirmtodeath.html', {'data_info':context})
             else:
                 error = True;    
 
     #return render(request,'server_view/confirmtodeath.html',{'error':error,'SN':serialNo })
+
+def incremental(number, tempList):
+    global caseList # [sno, date, state, country,]
+    global recList #[month, year, state, rec_rate] 1
+    global confList #[sno, state, country. conf] 2
+    global deathList #
+    
+    # print(number)
+    # print(tempList)
+    if (number == 1):
+        recList.append(tempList)
+        # print(recList)
+    elif (number == 2):
+        confList.append(tempList)
+    elif (number == 3):
+        caseFatList.append(tempList)
+
+        
       
 # Function shows the recovery rate in each city
 # Confirmed / recovered
 # should be recovered / confirmed (* 100)
 def rec_Rate(request):
-
+    global recList
     global caseList
     rec_tmp = caseList
     tmp_list = []
+    incTmp = []
     rec_list = []
     rate = 0.0
     currDay = 1
@@ -261,9 +297,22 @@ def rec_Rate(request):
     confirmedHigh = 0
     confirmedLow = 0
 
+
     month = request.POST.get('month')
     year = request.POST.get('year')
     state = request.POST.get('location')
+
+    start = time.time()
+
+    for line2 in recList:
+        if (month == line2[0] and year == line2[1] and state == line2[2]):
+            # print("entered incremental")
+            incTmp = line2
+            rec_list.append(incTmp)
+            # print(rec_list)
+            incTimer = time.time() - start
+            print("incremental time (for recovery rate): ", incTimer)
+            return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
     for line in range(1,len(caseList)-1):
         splitInput = split_date(caseList[line][1]) # 01/02/2020
@@ -312,13 +361,17 @@ def rec_Rate(request):
         tmp = (recoveredNum / confirmedDenom) * 100
         rate = "{:.2f}".format(tmp)
         # rec_list[line][0] = rec_tmp[line][2]
-        
+    tmp_list.append(month)
+    tmp_list.append(year)    
     tmp_list.append(state) #state/province
     tmp_list.append(rate)
     rec_list.append(tmp_list)
-    # print(tmp_list[])
     tmp_list = []
 
+    incremental(1, rec_list[0])
+
+    timer = time.time() - start
+    print("Non-incremental time (for recovery rate): ", timer)
     return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
 # deaths / (deaths + recovered) * 100 <- refers to ongoing epidemic
@@ -327,24 +380,57 @@ def rec_Rate(request):
 def caseFatalityRatio(request):
     
     global caseList
+    global caseFatList #month day year state
     case_tmp = caseList
-    rate = 0.0
+    ratio = 0.0
     newList = []
     ratioList = []
+    # state = ''
 
+    month = request.POST.get("month")
+    day = request.POST.get("day")
+    year = request.POST.get("year")
+    state = request.POST.get('state')
+
+    # print(state)
+    
+    start = time.time()
+
+    for line in caseFatList:
+        if (line[0] == month and line[1] == day and line[2] == year and line[3] == state):
+            newList = line
+            ratioList.append(newList)
+            incTimer = time.time() - start
+            print("Incremental Time (for caseFatalityRatio): ", incTimer)
+            return render(request, 'server_view/caseFatality.html', {'data_info': ratioList})
     for i in range (1, len(case_tmp) - 1):
-        if (float(caseList[i][6]) + float (caseList[i][7]) == 0):
-            ratio = 0.0
+        splitInput = split_date(caseList[i][1])
+        if (splitInput[1][0] == '0'):
+            tmpDay = splitInput[1][1]
         else:
-            ratioTmp = ((float(caseList[i][6]) / (float(caseList[i][6]) + float(caseList[i][7]))) * 100)
-            ratio = "{:.2f}".format(ratioTmp)
+            tmpDay = splitInput[1]
 
-        newList.append(caseList[i][2])
-        newList.append(caseList[i][3])
-        newList.append(ratio)
-        ratioList.append(newList)
-        newList = [] #empty list for next iteration
+        if (splitInput[0] == month and splitInput[2] == year and tmpDay == day and caseList[i][2] == state):
+            print("match found")
+            if (float(caseList[i][6]) + float (caseList[i][7]) == 0):
+                ratio = 0.0
+            else:
+                ratioTmp = ((float(caseList[i][6]) / (float(caseList[i][6]) + float(caseList[i][7]))) * 100)
+                ratio = "{:.2f}".format(ratioTmp)
 
+    newList.append(month)
+    newList.append(day)
+    newList.append(year)
+    newList.append(state)
+    # newList.append(caseList[i][2]) #state
+    newList.append(ratio)
+    # print(newList)
+    ratioList.append(newList)
+    newList = [] #empty list for next iteration
+    print(ratioList)
+    incremental(3, ratioList[0])
+    timer = time.time() - start
+    print("Non-Incremental Time (for caseFatalityRatio): ", timer)
     return render(request, 'server_view/caseFatality.html', {'data_info': ratioList})
     
 
