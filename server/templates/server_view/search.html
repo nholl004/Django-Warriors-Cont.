@@ -66,6 +66,26 @@
             outline-color: rgb(90, 155, 255);
             padding-top:30px;
         }
+        .display {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .display td, .display th{
+            border: 1px solid #ddd;
+            padding: 2px;
+            font-size:17px;
+        }
+        .display tr:nth-child(even){background-color: #f2f2f2;}
+        .display tr:hover {background-color: #ddd;}
+        .display th {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            text-align: left;
+            background-color: rgb(90, 155, 255);
+            color: white;
+        }
+
     </style>
 
     <h1>Covid 19 Search Database</h1>
@@ -106,16 +126,32 @@
             <a class="btn btn-primary" href="/backup">Backup</a>
             <p>Make sure to import data!</p>
         </form>
-        {% if data_info == NULL%}
-            <p>IMPORT</p>
-        {% endif %}
-        {% if error%}
-            <p> Error: Incorrect info added, please try again!</p>
-        {% else %}
-            {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
-                <p>{{SNo}} , {{observ}} , {{state}} , {{country}} , {{lastUp}} , {{confirm}} , {{deaths}} , {{recover}}</p>
-            {% endfor %}
-        {% endif %}
+        <table class="display">
+            {% if error%}
+                <p> Error: Incorrect info added, please try again!</p>
+            {% else %}
+                <th>Search Number</th>
+                <th>Observe Date</th>
+                <th>State/Province</th> 
+                <th>Country</th>
+                <th>Last Updated</th> 
+                <th>Confirms</th> 
+                <th>Deaths</th> 
+                <th>Recoveries</th>
+                {% for SNo, observ, state,country, lastUp, confirm, deaths, recover in data_info %}
+                    <tr>
+                        <td>{{SNo}}</td> 
+                        <td>{{observ}}</td> 
+                        <td>{{state}}</td>  
+                        <td>{{country}}</td>  
+                        <td>{{lastUp}}</td>  
+                        <td>{{confirm}}</td>  
+                        <td>{{deaths}}</td>  
+                        <td>{{recover}}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
     </div>
     <div class="sidebar">
             <p>Via Province/State:</p>

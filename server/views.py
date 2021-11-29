@@ -6,30 +6,33 @@ from django.http import JsonResponse
 from .forms import serverForm
 from .models import search
 from server import viewsFunctions
+from server import initClass
 import time
 # Create your views here.
 
-caseList = [[]]
+#caseList = [[]]
 
-listC = []
-listD = []
-listR = []
-sumC = 0 
-sumD = 0 
-sumR = 0
+# listC = []
+# listD = []
+# listR = []
+# sumC = 0 
+# sumD = 0 
+# sumR = 0
 
 recList = []
 confList = []
 caseFatList = []
 
+listClass = initClass.initList()
+top10 = initClass.init_Top10()
+
 def importButton(request):
-    global caseList
     viewsFunctions.test()
-    caseList = viewsFunctions.importFunc()
+    listClass.list = viewsFunctions.importFunc()
     return render(request, 'server_view/import.html')
 
 def search(request):
-    global caseList
+    caseList = listClass.list
 
     searched_data = request.POST.get('search')
     #print(searched_data)
@@ -57,7 +60,14 @@ def search(request):
         'data_info':data_info,'error':error})
 
 def top_cases(request):
-    global caseList, listC, listD, listR, sumC, sumD, sumR
+    caseList = listClass.list
+
+    listC = top10.listC
+    listD = top10.listD
+    listR = top10.listR
+    sumC = top10.sumC
+    sumD = top10.sumD
+    sumR = top10.sumR
 
     conf= [] 
     provC= [] 
@@ -75,6 +85,13 @@ def top_cases(request):
         sumR = viewsFunctions.caseTotal(7,caseList)
         print("Testing cache check",sumC, sumD, sumR)
     
+    top10.listC = listC
+    top10.listD = listD
+    top10.listR = listR
+    top10.sumC = sumC
+    top10.sumD = sumD
+    top10.sumR = sumR
+
     topsumC=0
     topsumD=0
     topsumR=0
@@ -88,11 +105,13 @@ def top_cases(request):
         recov.append(listR[f][7])
         topsumR += float(listR[f][5])
         provR.append(listR[f][2])
-    print("Testing sums: ",topsumC,topsumD,topsumR)
+
+    print( "Testing sums: ",topsumC,topsumD,topsumR)
     top10C_impact=str(round((topsumC/sumC)*100,2)) + '%'
     top10D_impact=str(round((topsumD/sumD)*100,2)) + '%'
     top10R_impact=str(round((topsumR/sumR)*100,2)) + '%'
     print(top10C_impact, top10D_impact,top10R_impact)
+
     context = {
         'dataC':listC,
         'conf':conf,
@@ -110,6 +129,7 @@ def top_cases(request):
     return render(request, 'server_view/top_cases.html',context)  
 
 def backup(request):
+    caseList = listClass.list
     #make a copy of current data 
     #parse the current data into another csv file 
     test_file = open("covid_19_data.csv", "w")
@@ -127,6 +147,8 @@ def backup(request):
 #This function Deletes the data at the specific SNo value.
 #This value is obtained in /search url and requires user input.     
 def delete(request):
+    caseList = listClass.list
+
     delete_index = str(request.POST.get('index'))
     cnt = 0
     data = 0
@@ -157,6 +179,8 @@ def delete(request):
 #This functions reads 7 user inputs after submit button pressed or enter
 #If inputs are filled minus state/province it is saved in to csv file
 def insert(request):
+    caseList = listClass.list
+
     tmp_file = []
     Sno1 = int(caseList[len(caseList)-1][0])+1
     observ1 = str(request.POST.get('observ'))
@@ -197,6 +221,7 @@ def insert(request):
 
 
 def update(request):
+    caseList = listClass.list
 
     indexToUpdate = str(request.POST.get('index'))
     confirms2 = str(request.POST.get('confirm'))
@@ -224,7 +249,8 @@ def update(request):
         return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
 def confirm_to_death(request):
-    global caseList
+    caseList = listClass.list
+
     global confList
     serialNo = str(request.POST.get('SN'))
     contextTmp = []
@@ -275,7 +301,7 @@ def confirm_to_death(request):
     #return render(request,'server_view/confirmtodeath.html',{'error':error,'SN':serialNo })
 
 def incremental(number, tempList):
-    global caseList # [sno, date, state, country,]
+    caseList = listClass.list # [sno, date, state, country,]
     global recList #[month, year, state, rec_rate] 1
     global confList #[sno, state, country. conf] 2
     global deathList #
@@ -297,7 +323,8 @@ def incremental(number, tempList):
 # should be recovered / confirmed (* 100)
 def rec_Rate(request):
     global recList
-    global caseList
+    caseList = listClass.list
+
     rec_tmp = caseList
     tmp_list = []
     incTmp = []
@@ -394,9 +421,9 @@ def rec_Rate(request):
 # nonongoing cfr is deaths / confirmed * 100 
 # case fatality ratio is the proportion of individuals diagnosed with a disease who die from that disease and is therefore a measure of severity among detected cases
 def caseFatalityRatio(request):
-    
-    global caseList
+    caseList = listClass.list
     global caseFatList #month day year state
+
     case_tmp = caseList
     ratio = 0.0
     newList = []
@@ -451,6 +478,7 @@ def caseFatalityRatio(request):
     
 
 def daily_cases(request):
+    caseList = listClass.list
     #sort the cases of a certain location and month
     month = request.POST.get('month')
     year = request.POST.get('year')
@@ -483,6 +511,7 @@ def daily_cases(request):
     return render(request, 'server_view/daily.html', {'data_info':dailyCasesList})
 
 def daily_deaths(request):
+    caseList = listClass.list
     #sort the cases of a certain location and month
     month = request.POST.get('month')
     year = request.POST.get('year')
@@ -528,7 +557,8 @@ def split_date(date):
 
 # Comparing 2 States/Provinces: Graph Edition
 def compareTwo(request):
-    global caseList
+    caseList = listClass.list
+
     conf1 = 0
     conf2 = 0
     death1 = 0
@@ -575,6 +605,8 @@ def compareTwo(request):
         return render(request, 'server_view/compare.html',{'error':error, 'state1':state1, 'state2':state2, 'conf1':conf1, 'death1':death1, 'rec1':rec1, 'conf2':conf2, 'death2':death2, 'rec2':rec2, })
 
 def peakdays(request):
+    caseList = listClass.list
+    
     HighestPeakDiffConfirmed = 0 #index 6 for confirmed
     HighestPeakDiffDeaths = 0 #index 7 for deaths
     HighestPeakDiffRecovered = 0 #index 8 for recovered
