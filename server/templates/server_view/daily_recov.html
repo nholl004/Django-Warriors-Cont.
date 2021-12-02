@@ -28,36 +28,35 @@
     </style>
 </head>
 <div class = "input">
-    <h1>Monthly Confirm Cases</h1>
+    <h1> Monthly Recoveries </h1>
     <form method='POST'> {% csrf_token %}
-        <p>Daily cases in a certain location and month:</p>
+        <p>Daily deaths in a certain location and month:</p>
         <body class = "input">
             <p>Month:("mm" format)  <input type="text" name="month"></p>
-            <p>Year: ("yyyy" format) <input type="text" name ="year"></p>
+            <p>Year: ("yyyy" format) <input type="text" name ="year"</p>
             <p>Province/State: <input type="text" name="location"></p>
-            <button type="submit">Submit</button> 
+            <button type="submit">Submit</button>
             <a class="btn btn-primary" href="/search">Return</a>
-            {% if data_info%}   
+            {% if data_info%}
                 <table class = "display"> 
                     <th>Search Number</th>
                     <th>Observe Date</th>
                     <th>State/Province</th> 
                     <th>Country</th>
                     <th>Last Updated</th> 
-                    <th>Confirms</th> 
-                    {% for SNo, observ, state, country, lastUp, confirm in data_info %}
+                    <th>Recoveries</th> 
+                    {% for SNo, observ, state, country, lastUp, recover in data_info %}
                         <tr>
                             <td>{{SNo}}</td> 
                             <td>{{observ}}</td> 
                             <td>{{state}}</td>  
                             <td>{{country}}</td>  
                             <td>{{lastUp}}</td>   
-                            <td>{{confirm}}</td>
+                            <td>{{recover}}</td>
                         </tr>            
                     {% endfor %} 
-                </table> 
-            {% endif %} 
+                </table>
+            {% endif %}
         </body>
     </form>
 </div>
-    

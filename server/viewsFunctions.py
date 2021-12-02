@@ -1,3 +1,4 @@
+
 def test():
     print("viewsFunction file working... ")
 
@@ -33,6 +34,8 @@ def importFunc():
     print('case size:',len(tmp_list))
     return tmp_list
 
+#Values are filtered through to ensure we check only cities and is most recent update of data.
+#data_postion = postion of confirms/deaths/recoveries
 def top10(data_position,database_list):
     list = []
     for i in range(1,len(database_list)): 
@@ -65,7 +68,7 @@ def top10(data_position,database_list):
                     elif(k1_2cnt == 1):
                         list[k] = database_list[i]
     return list
-    
+#Values are filtered through to ensure we check only cities and is most recent update of data.   
 def caseTotal(data_position,database_list):
     sum = 0
     list = []
@@ -89,3 +92,32 @@ def caseTotal(data_position,database_list):
                     list.pop(k)
 
     return sum
+
+def split_date(date):    
+    #mm/dd/yyyy
+    #0123456789
+    month = date[0:2]
+    day = date[3:5]
+    year = date[6:10]
+    dateList = [month,day,year]
+    return dateList
+
+def dailyFunc(m,y,l,dataset,dataPosition):#month/year/location
+    dailyList = []
+    currDay = 1
+
+    for i in range(1, len(dataset) - 1):
+        splitList = split_date(dataset[i][1]) #split into 3  strings of "mm" "dd" "YYYY"
+        #convert the day to an integer
+        if(splitList[1][0] == '0'): #if first character in "dd" is 0 then convert second character to int
+            tmpDay = int(splitList[1][1])
+        else:
+            tmpDay = int(splitList[1])
+
+        if(splitList[0] == m and currDay == tmpDay and currDay <= 31 and splitList[2] == y and dataset[i][2] == l ):
+            #add valid row to list
+            caseListCombined = dataset[i][0:5]
+            caseListCombined.append(dataset[i][dataPosition])
+            dailyList.append(caseListCombined)
+            currDay = currDay + 1
+    return dailyList

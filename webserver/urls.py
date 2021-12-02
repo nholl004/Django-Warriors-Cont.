@@ -36,5 +36,6 @@ urlpatterns = [
     path('daily',views.daily_cases),
     path('compare',views.compareTwo),
     path('dailydeaths',views.daily_deaths),
-    path('casefatality', views.caseFatalityRatio)
+    path('casefatality', views.caseFatalityRatio),
+    path('dailyrecov',views.daily_recov),
 ]

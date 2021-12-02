@@ -59,6 +59,128 @@ def search(request):
         return render(request,'server_view/search.html', {'searched':searched_data,
         'data_info':data_info,'error':error})
 
+def backup(request):
+    caseList = listClass.list
+    #make a copy of current data 
+    #parse the current data into another csv file 
+    test_file = open("covid_19_data.csv", "w")
+    line = ''
+    for x in caseList:
+        for y in range(0,8):
+            line += x[y]
+            if(y < 7):
+                line += ','
+    test_file.write(line)
+    test_file.close()
+    return render(request, 'server_view/backup.html')
+    
+#This function Deletes the data at the specific SNo value.
+#This value is obtained in /search url and requires user input.     
+def delete(request):
+    caseList = listClass.list
+
+    delete_index = str(request.POST.get('index'))
+    cnt = 0
+    data = 0
+    #print(delete_index)
+    
+    #print(caseList[1:5])
+    if(delete_index == 'None'):
+        #print('hi')
+        return render(request,'server_view/delete.html')
+    elif(delete_index != 'None'):
+        #print(caseList[306426:])
+        for i in range(1,len(caseList)-1):
+            if(int(caseList[i][0]) == int(delete_index)):
+                cnt += 1
+                data = caseList[i]
+                caseList.pop(i)
+
+        #allows us to delete last value
+            elif(int(caseList[len(caseList)-1][0]) == int(delete_index)):
+                cnt+=1
+                data = caseList[len(caseList)-1]
+                caseList.pop(len(caseList)-1)
+        if(cnt==0):
+            data = 'No such index'
+        top10.update = 1
+        listClass.list = caseList
+        #print(caseList[306426:])
+        return render(request,'server_view/delete.html',{'del_data':data})
+
+#This functions reads 7 user inputs after submit button pressed or enter
+#If inputs are filled minus state/province it is saved in to csv file
+def insert(request):
+    caseList = listClass.list
+
+    tmp_file = []
+    Sno1 = int(caseList[len(caseList)-1][0])+1
+    observ1 = str(request.POST.get('observ'))
+    state1 = str(request.POST.get('state'))
+    country1 = str(request.POST.get('country'))
+    lastUp1 = str(request.POST.get('lastUp'))
+    confirms1 = str(request.POST.get('confirm')) + '.0'
+    deaths1 = str(request.POST.get('deaths')) + '.0'
+    recovered1 = str(request.POST.get('recover')) + '.0'
+    recovered1 = recovered1 + '\n'#preps for save to file
+
+    if not observ1 or not country1 or not lastUp1 or not confirms1 or not deaths1 or not recovered1:
+        error = True
+        return render(request,'server_view/insert.html',{'error':error,'observ':observ1,'state':state1,'country':country1,
+    'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
+    else:
+        error = False
+        
+        tmp_file.append(str(Sno1)) 
+        tmp_file.append(observ1)
+        tmp_file.append(state1)
+        tmp_file.append(country1)
+        tmp_file.append(lastUp1)
+        tmp_file.append(confirms1)
+        tmp_file.append(deaths1)
+        tmp_file.append(recovered1)
+        caseList.append(tmp_file)
+
+        if(str(caseList[len(caseList)-1][1]) == "None"):
+            caseList.pop(len(caseList)-1)
+        top10.update = 1
+        listClass.list = caseList
+        return render(request,'server_view/insert.html',{'error':error,'observ':observ1,'state':state1,'country':country1,
+    'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
+
+# This update feature, is able to update the current data structure with input of strings. 
+# Given the index, we can update the row to which the data is inputted. Similar to that of insert. 
+
+
+def update(request):
+    caseList = listClass.list
+
+    indexToUpdate = str(request.POST.get('index'))
+    confirms2 = str(request.POST.get('confirm'))
+    deaths2 = str(request.POST.get('deaths'))
+    recovered2 = str(request.POST.get('recover'))
+
+    if not indexToUpdate or not confirms2 or not deaths2 or not recovered2:
+        error = True
+        return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
+    else:
+        error = False
+
+        if(indexToUpdate == 'None'):
+            return render(request,'server_view/update.html')
+        else:
+            for i in range(1,len(caseList)-1):
+                if(int(caseList[i][0]) == int(indexToUpdate)):                  
+                    caseList[i][5] = str(confirms2+'.0')
+                    caseList[i][6] = str(deaths2+'.0')
+                    caseList[i][7] = str(recovered2+'.0\n')
+                    print(caseList[i-2:i+4])
+                else:
+                    error = True
+        top10.update = 1
+        listClass.list = caseList
+        return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
+
 def top_cases(request):
     caseList = listClass.list
 
@@ -85,6 +207,16 @@ def top_cases(request):
         sumR = viewsFunctions.caseTotal(7,caseList)
         print("Testing cache check",sumC, sumD, sumR)
     
+    if(top10.update == 1):
+        listC = viewsFunctions.top10(5, caseList)
+        listD = viewsFunctions.top10(6, caseList)
+        listR = viewsFunctions.top10(7, caseList)
+        sumC = viewsFunctions.caseTotal(5,caseList)
+        sumD = viewsFunctions.caseTotal(6,caseList)
+        sumR = viewsFunctions.caseTotal(7,caseList)
+        top10.update = 0
+        print("Testing cache check",sumC, sumD, sumR, top10.update)
+
     top10.listC = listC
     top10.listD = listD
     top10.listR = listR
@@ -127,126 +259,6 @@ def top_cases(request):
         'rImpact':top10R_impact,
     }
     return render(request, 'server_view/top_cases.html',context)  
-
-def backup(request):
-    caseList = listClass.list
-    #make a copy of current data 
-    #parse the current data into another csv file 
-    test_file = open("covid_19_data.csv", "w")
-    line = ''
-    for x in caseList:
-        for y in range(0,8):
-            line += x[y]
-            if(y < 7):
-                line += ','
-    test_file.write(line)
-    test_file.close()
-    return render(request, 'server_view/backup.html')
-    
-
-#This function Deletes the data at the specific SNo value.
-#This value is obtained in /search url and requires user input.     
-def delete(request):
-    caseList = listClass.list
-
-    delete_index = str(request.POST.get('index'))
-    cnt = 0
-    data = 0
-    #print(delete_index)
-    
-    #print(caseList[1:5])
-    if(delete_index == 'None'):
-        #print('hi')
-        return render(request,'server_view/delete.html')
-    elif(delete_index != 'None'):
-        #print(caseList[306426:])
-        for i in range(1,len(caseList)-1):
-            if(int(caseList[i][0]) == int(delete_index)):
-                cnt += 1
-                data = caseList[i]
-                caseList.pop(i)
-
-        #allows us to delete last value
-            elif(int(caseList[len(caseList)-1][0]) == int(delete_index)):
-                cnt+=1
-                data = caseList[len(caseList)-1]
-                caseList.pop(len(caseList)-1)
-        if(cnt==0):
-            data = 'No such index'
-        #print(caseList[306426:])
-        return render(request,'server_view/delete.html',{'del_data':data})
-
-#This functions reads 7 user inputs after submit button pressed or enter
-#If inputs are filled minus state/province it is saved in to csv file
-def insert(request):
-    caseList = listClass.list
-
-    tmp_file = []
-    Sno1 = int(caseList[len(caseList)-1][0])+1
-    observ1 = str(request.POST.get('observ'))
-    state1 = str(request.POST.get('state'))
-    state1 = '\"' + state1 + '\"'
-    country1 = str(request.POST.get('country'))
-    lastUp1 = str(request.POST.get('lastUp'))
-    confirms1 = str(request.POST.get('confirm'))
-    deaths1 = str(request.POST.get('deaths'))
-    recovered1 = str(request.POST.get('recover'))
-    recovered1 = recovered1 + '\n'#preps for save to file
-
-    if not observ1 or not country1 or not lastUp1 or not confirms1 or not deaths1 or not recovered1:
-        error = True
-        return render(request,'server_view/insert.html',{'error':error,'observ':observ1,'state':state1,'country':country1,
-    'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
-    else:
-        error = False
-        
-        tmp_file.append(str(Sno1)) 
-        tmp_file.append(observ1)
-        tmp_file.append(state1)
-        tmp_file.append(country1)
-        tmp_file.append(lastUp1)
-        tmp_file.append(confirms1)
-        tmp_file.append(deaths1)
-        tmp_file.append(recovered1)
-        caseList.append(tmp_file)
-
-        if(str(caseList[len(caseList)-1][1]) == "None"):
-            caseList.pop(len(caseList)-1)
-
-        return render(request,'server_view/insert.html',{'error':error,'observ':observ1,'state':state1,'country':country1,
-    'lastUp':lastUp1,'confirms':confirms1,'deaths':deaths1,'recovered':recovered1})
-
-# This update feature, is able to update the current data structure with input of strings. 
-# Given the index, we can update the row to which the data is inputted. Similar to that of insert. 
-
-
-def update(request):
-    caseList = listClass.list
-
-    indexToUpdate = str(request.POST.get('index'))
-    confirms2 = str(request.POST.get('confirm'))
-    deaths2 = str(request.POST.get('deaths'))
-    recovered2 = str(request.POST.get('recover'))
-
-    if not indexToUpdate or not confirms2 or not deaths2 or not recovered2:
-        error = True
-        return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
-    else:
-        error = False
-
-        if(indexToUpdate == 'None'):
-            return render(request,'server_view/update.html')
-        else:
-            for i in range(1,len(caseList)-1):
-                if(int(caseList[i][0]) == int(indexToUpdate)):                  
-                    caseList[i][5] = str(confirms2+'.0')
-                    caseList[i][6] = str(deaths2+'.0')
-                    caseList[i][7] = str(recovered2+'.0\n')
-                    print(caseList[i-2:i+4])
-                else:
-                    error = True
-
-        return render(request,'server_view/update.html',{'error':error,'index':indexToUpdate,'confirms':confirms2,'deaths':deaths2,'recovered':recovered2})
 
 def confirm_to_death(request):
     caseList = listClass.list
@@ -358,7 +370,7 @@ def rec_Rate(request):
             return render(request, 'server_view/recRate.html',{'data_info':rec_list})
 
     for line in range(1,len(caseList)-1):
-        splitInput = split_date(caseList[line][1]) # 01/02/2020
+        splitInput = viewsFunctions.split_date(caseList[line][1]) # 01/02/2020
         if (splitInput[1][0] == '0'):
             tmpDay = int(splitInput[1][1])
         else:
@@ -447,7 +459,7 @@ def caseFatalityRatio(request):
             print("Incremental Time (for caseFatalityRatio): ", incTimer)
             return render(request, 'server_view/caseFatality.html', {'data_info': ratioList})
     for i in range (1, len(case_tmp) - 1):
-        splitInput = split_date(caseList[i][1])
+        splitInput = viewsFunctions.split_date(caseList[i][1])
         if (splitInput[1][0] == '0'):
             tmpDay = splitInput[1][1]
         else:
@@ -487,27 +499,7 @@ def daily_cases(request):
     #find the beginning of the month aka the first
     #keep iterating until 28 days are iterated through
     #a valid row is when month year current day and location are correct
-
-    dailyCasesList = []
-    currDay = 1
-
-    
-
-    for i in range(1, len(caseList) - 1):
-        splitList = split_date(caseList[i][1]) #split into 3  strings of "mm" "dd" "YYYY"
-        #convert the day to an integer
-        if(splitList[1][0] == '0'): #if first character in "dd" is 0 then convert second character to int
-            tmpDay = int(splitList[1][1])
-        else:
-            tmpDay = int(splitList[1])
-
-        if(splitList[0] == month and currDay == tmpDay and currDay <= 31 and splitList[2] == year and caseList[i][2] == location ):
-            #add valid row to list
-            dailyCasesList.append(caseList[i][0:6])
-            currDay = currDay + 1
-            
-    # print(dailyCasesList[0:-1])
-    # print(currDay)
+    dailyCasesList = viewsFunctions.dailyFunc(month,year,location,caseList,5)
     return render(request, 'server_view/daily.html', {'data_info':dailyCasesList})
 
 def daily_deaths(request):
@@ -520,40 +512,25 @@ def daily_deaths(request):
     #find the beginning of the month aka the first
     #keep iterating until 28 days are iterated through
     #a valid row is when month year current day and location are correct
-
-    dailyCasesList = []
-    currDay = 1
-
-    
-
-    for i in range(1, len(caseList) - 1):
-        splitList = split_date(caseList[i][1]) #split into 3  strings of "mm" "dd" "YYYY"
-        #convert the day to an integer
-        if(splitList[1][0] == '0'): #if first character in "dd" is 0 then convert second character to int
-            tmpDay = int(splitList[1][1])
-        else:
-            tmpDay = int(splitList[1])
-
-        if(splitList[0] == month and currDay == tmpDay and currDay <= 31 and splitList[2] == year and caseList[i][2] == location ):
-            #add valid row to list
-            caseListCombined = caseList[i][0:5] + caseList[i][6:7]
-            dailyCasesList.append(caseListCombined)
-            currDay = currDay + 1
-            
+    dailyCasesList = viewsFunctions.dailyFunc(month,year,location,caseList,6)       
     # print(dailyCasesList[0:-1])
     # print(currDay)
     return render(request, 'server_view/daily_deaths.html', {'data_info':dailyCasesList})
 
-        
-
-def split_date(date):    
-    #mm/dd/yyyy
-    #0123456789
-    month = date[0:2]
-    day = date[3:5]
-    year = date[6:10]
-    dateList = [month,day,year]
-    return dateList
+def daily_recov(request):
+    caseList = listClass.list
+    #sort the cases of a certain location and month
+    month = request.POST.get('month')
+    year = request.POST.get('year')
+    location = request.POST.get('location') #gets province/state
+    
+    #find the beginning of the month aka the first
+    #keep iterating until 28 days are iterated through
+    #a valid row is when month year current day and location are correct
+    dailyCasesList = viewsFunctions.dailyFunc(month,year,location,caseList,7)       
+    # print(dailyCasesList[0:-1])
+    # print(currDay)
+    return render(request, 'server_view/daily_recov.html', {'data_info':dailyCasesList})
 
 # Comparing 2 States/Provinces: Graph Edition
 def compareTwo(request):
