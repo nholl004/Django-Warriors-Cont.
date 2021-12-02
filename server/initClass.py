@@ -9,3 +9,4 @@ class init_Top10:
         self.sumC = 0
         self.sumD = 0
         self.sumR = 0
+        self.update = 0
