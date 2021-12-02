@@ -25,6 +25,17 @@
             background-color: rgb(90, 155, 255);
             color: white;
         }
+        .growth {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            position: relative;
+            background-color: rgb(90, 155, 255);
+            color: white;
+            text-align: center;
+        }
     </style>
 </head>
 <div class = "input">
@@ -55,7 +66,8 @@
                             <td>{{deaths}}</td>
                         </tr>            
                     {% endfor %} 
-                </table> 
+                </table>
+                <p class = "growth">The Growth Rate of Deaths: {{growth}}</p> 
             {% endif %}
         </body>
     </form>

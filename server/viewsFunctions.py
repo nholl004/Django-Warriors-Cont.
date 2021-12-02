@@ -102,6 +102,9 @@ def split_date(date):
     dateList = [month,day,year]
     return dateList
 
+#find the beginning of the month aka the first
+#keep iterating until 28 days are iterated through
+#a valid row is when month year current day and location are correct
 def dailyFunc(m,y,l,dataset,dataPosition):#month/year/location
     dailyList = []
     currDay = 1
@@ -121,3 +124,15 @@ def dailyFunc(m,y,l,dataset,dataPosition):#month/year/location
             dailyList.append(caseListCombined)
             currDay = currDay + 1
     return dailyList
+
+def growthRate(dailyList):
+    if(dailyList):
+        dif = float(dailyList[len(dailyList)-1][5])-float(dailyList[0][5])
+        sum = 0
+        for i in dailyList:
+            sum += float(i[5])
+        if(sum == 0):
+            return '0.00%'
+        else:
+            return str(round((dif/sum)*100,2)) + '%'
+    else: return

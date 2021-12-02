@@ -495,12 +495,10 @@ def daily_cases(request):
     month = request.POST.get('month')
     year = request.POST.get('year')
     location = request.POST.get('location') #gets province/state
-    
-    #find the beginning of the month aka the first
-    #keep iterating until 28 days are iterated through
-    #a valid row is when month year current day and location are correct
-    dailyCasesList = viewsFunctions.dailyFunc(month,year,location,caseList,5)
-    return render(request, 'server_view/daily.html', {'data_info':dailyCasesList})
+
+    dailyList = viewsFunctions.dailyFunc(month,year,location,caseList,5)
+    growth = viewsFunctions.growthRate(dailyList)
+    return render(request, 'server_view/daily.html', {'data_info':dailyList,'growth':growth})
 
 def daily_deaths(request):
     caseList = listClass.list
@@ -508,14 +506,10 @@ def daily_deaths(request):
     month = request.POST.get('month')
     year = request.POST.get('year')
     location = request.POST.get('location') #gets province/state
-    
-    #find the beginning of the month aka the first
-    #keep iterating until 28 days are iterated through
-    #a valid row is when month year current day and location are correct
-    dailyCasesList = viewsFunctions.dailyFunc(month,year,location,caseList,6)       
-    # print(dailyCasesList[0:-1])
-    # print(currDay)
-    return render(request, 'server_view/daily_deaths.html', {'data_info':dailyCasesList})
+
+    dailyList = viewsFunctions.dailyFunc(month,year,location,caseList,6)
+    growth = viewsFunctions.growthRate(dailyList)       
+    return render(request, 'server_view/daily_deaths.html', {'data_info':dailyList,'growth':growth})
 
 def daily_recov(request):
     caseList = listClass.list
@@ -524,13 +518,9 @@ def daily_recov(request):
     year = request.POST.get('year')
     location = request.POST.get('location') #gets province/state
     
-    #find the beginning of the month aka the first
-    #keep iterating until 28 days are iterated through
-    #a valid row is when month year current day and location are correct
-    dailyCasesList = viewsFunctions.dailyFunc(month,year,location,caseList,7)       
-    # print(dailyCasesList[0:-1])
-    # print(currDay)
-    return render(request, 'server_view/daily_recov.html', {'data_info':dailyCasesList})
+    dailyList = viewsFunctions.dailyFunc(month,year,location,caseList,7)
+    growth = viewsFunctions.growthRate(dailyList)      
+    return render(request, 'server_view/daily_recov.html', {'data_info':dailyList,'growth':growth})
 
 # Comparing 2 States/Provinces: Graph Edition
 def compareTwo(request):
