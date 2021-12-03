@@ -107,9 +107,8 @@ def split_date(date):
 #a valid row is when month year current day and location are correct
 def dailyFunc(m,y,l,dataset,dataPosition):#month/year/location
     dailyList = []
-    currDay = 1
 
-    for i in range(1, len(dataset) - 1):
+    for i in range(1, len(dataset)):
         splitList = split_date(dataset[i][1]) #split into 3  strings of "mm" "dd" "YYYY"
         #convert the day to an integer
         if(splitList[1][0] == '0'): #if first character in "dd" is 0 then convert second character to int
@@ -117,12 +116,11 @@ def dailyFunc(m,y,l,dataset,dataPosition):#month/year/location
         else:
             tmpDay = int(splitList[1])
 
-        if(splitList[0] == m and currDay == tmpDay and currDay <= 31 and splitList[2] == y and dataset[i][2] == l ):
+        if(splitList[0] == m and (tmpDay <= 31 and tmpDay >= 1) and splitList[2] == y and dataset[i][2] == l ):
             #add valid row to list
             caseListCombined = dataset[i][0:5]
             caseListCombined.append(dataset[i][dataPosition])
             dailyList.append(caseListCombined)
-            currDay = currDay + 1
     return dailyList
 
 def growthRate(dailyList):

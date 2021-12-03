@@ -72,7 +72,7 @@ def backup(request):
                 line += ','
     test_file.write(line)
     test_file.close()
-    return render(request, 'server_view/backup.html')
+    return render(request, 'server_view/backup.html', {'list':caseList})
     
 #This function Deletes the data at the specific SNo value.
 #This value is obtained in /search url and requires user input.     
