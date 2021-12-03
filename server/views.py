@@ -625,7 +625,7 @@ def peakdays(request):
 
     print(Province_State)
     print(Country_Region)
-    for i in range(1,len(caseList)-1):
+    for i in range(1,len(caseList)):
         if(caseList[i][3] == Country_Region and caseList[i][2] == Province_State):
             for y in range(0,8):
                 tmpList.append(caseList[i][y])
@@ -634,21 +634,23 @@ def peakdays(request):
     #for k in range(1,len(specificLocationList)-1):
     #    print(specificLocationList[k][6])
     #Gathering peak data for confirmed cases.
-    for j in range(2,len(specificLocationList)-1):
+    for j in range(1,len(specificLocationList)):
         if(float(specificLocationList[j][5]) - float(specificLocationList[j - 1][5]) > HighestPeakDiffConfirmed):
             HighestPeakDiffConfirmed = float(specificLocationList[j][5]) - float(specificLocationList[j - 1][5])
             DateOfHighestPeakConfirmed = specificLocationList[j][1]
     contexts["confirmedCase"] = str(HighestPeakDiffConfirmed)
     contexts["confirmedCaseDate"] = str(DateOfHighestPeakConfirmed)
+
     #Gathering peak data for death cases.
-    for j in range(2,len(specificLocationList)-1):
+    for j in range(1,len(specificLocationList)):
         if(float(specificLocationList[j][6]) - float(specificLocationList[j - 1][6]) > HighestPeakDiffDeaths):
             HighestPeakDiffDeaths = float(specificLocationList[j][6]) - float(specificLocationList[j - 1][6])
             DateOfHighestPeakDeaths = specificLocationList[j][1]
     contexts["deathCase"] = str(HighestPeakDiffDeaths)
     contexts["deathCaseDate"] = str(DateOfHighestPeakDeaths)
+    
     #Gathering peak data for recovered cases.
-    for j in range(2,len(specificLocationList)-1):
+    for j in range(1,len(specificLocationList)):
         if(float(specificLocationList[j][7]) - float(specificLocationList[j - 1][7]) > HighestPeakDiffRecovered):
             HighestPeakDiffRecovered = float(specificLocationList[j][7]) - float(specificLocationList[j - 1][7])
             DateOfHighestPeakRecovered = specificLocationList[j][1]
