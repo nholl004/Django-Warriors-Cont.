@@ -23,6 +23,7 @@ urlpatterns = [
     # path('test1/',views.test1),
     # path('searching/', views.searching),
     # path('searched/', views.searched),
+    path('', views.search),
     path('search',views.search),
     path('backup',views.backup),
     path('delete',views.delete),
