@@ -10,11 +10,15 @@
         <a class="btn btn-primary" href="/search">Return</a>
         <p class = "resultTitle">Insert info:</p>
         <body>
-            <p>Serial Number <input type="text" name="SN" id="SN"></p>
+            <p>Month:("mm" format)  <input type="text" name="month"></p>
+            <p>Day:("dd" format) <input type = "text" name = "day"></p>
+            <p>Year: ("yyyy" format) <input type="text" name ="year"></p>
+            <p>Province/State: <input type="text" name="state" id = 'state'></p>
             <button type="submit">Submit</button>
             <p> 0 deaths are considered 1 death </p> 
-            {% for sno,confirmedCases, confirmedDeaths, ratio in data_info %}
-                <p> Serial Number: {{sno}} Ratio: {{confirmedCases}} / {{confirmedDeaths}} = {{ratio}} </p> 
+            {% for month, day, year, state, confirmedCases, confirmedDeaths, ratio in data_info %}
+                <p></p>
+                <p class = "peakDaysResult"><span class = "descriptions"> Month: </span>{{month}} , <span class = "descriptions"> Day: </span>{{day}} , <span class = "descriptions"> Year: </span>{{year}} , <span class = "descriptions">State: </span>{{state}} , <span class = "recovery"> Ratio: {{confirmedCases}} / {{confirmedDeaths}} = {{ratio}} </p> 
             {% endfor %}
         </body>
     </form>
