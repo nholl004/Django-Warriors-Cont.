@@ -127,9 +127,7 @@
             <p>Make sure to import data!</p>
         </form>
         <table class="display">
-            {% if error%}
-                <p> Error: Incorrect info added, please try again!</p>
-            {% else %}
+            {% if data_info%}
                 <th>Search Number</th>
                 <th>Observe Date</th>
                 <th>State/Province</th> 
@@ -150,6 +148,8 @@
                         <td>{{recover}}</td>
                     </tr>
                 {% endfor %}
+            {% else %}
+                <p> Error: Incorrect info added, please try again!</p>
             {% endif %}
         </table>
     </div>

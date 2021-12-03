@@ -47,17 +47,17 @@ def search(request):
                     data_info.append(caseList[x])
 
     #print(len(data_info))
-    if (len(data_info)<2):
-        error = True
-        return render(request,'server_view/search.html', {'searched':searched_data, 
-        'error':error})
-        #print(data_info)
-    else:
+    if (data_info):
         error = False
         data_info.pop(0)
         #print(data_info)
         return render(request,'server_view/search.html', {'searched':searched_data,
         'data_info':data_info,'error':error})
+    else:
+        error = True
+        return render(request,'server_view/search.html', {'searched':searched_data, 
+        'error':error})
+        #print(data_info)
 
 def backup(request):
     caseList = listClass.list
@@ -492,10 +492,13 @@ def caseFatalityRatio(request):
 def daily_cases(request):
     caseList = listClass.list
     #sort the cases of a certain location and month
-    month = request.POST.get('month')
-    year = request.POST.get('year')
+    date = str(request.POST.get('month'))+'-'
+    dateList = date.split('-')
+    year = dateList[0]
+    month = dateList[1]
     location = request.POST.get('location') #gets province/state
-
+    print(month, year, date,location)
+    
     dailyList = viewsFunctions.dailyFunc(month,year,location,caseList,5)
     growth = viewsFunctions.growthRate(dailyList)
     return render(request, 'server_view/daily.html', {'data_info':dailyList,'growth':growth})
