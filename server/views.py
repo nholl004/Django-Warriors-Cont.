@@ -264,51 +264,65 @@ def confirm_to_death(request):
     caseList = listClass.list
 
     global confList
-    serialNo = str(request.POST.get('SN'))
+    month = request.POST.get("month")
+    day = request.POST.get("day")
+    year = request.POST.get("year")
+    state = request.POST.get('state')
+
     contextTmp = []
     context = []
     start = time.time()
-    if not serialNo:
-        print(3)
-        error = True
-        return render(request,'server_view/confirmtodeath.html',{'error':error,'data_info': context })
-    else:
-        error = False
-        if(serialNo == 'None'):
-            return render(request,'server_view/confirmtodeath.html')
-        ratio = -1; 
-        for line in confList:
-            if (serialNo == line[0]):
-                contextTmp = line
-                context.append(contextTmp)
-                incFinish = time.time() - start
-                print("incremental time (for confirm_to_death): ", incFinish)
-                return render(request,'server_view/confirmtodeath.html', {'data_info':context})
-        for i in range(1, len(caseList) - 1):
-            if(int(caseList[i][0]) == int(serialNo)):
-                casesConfirmed = float(caseList[i][5])
-                casesDeaths = float(caseList[i][6])
-                if(casesDeaths == 0):
-                    casesDeaths = 1
-                # confirmed / deaths
-                ratio = casesConfirmed / casesDeaths
-                # contextTmp.append(float(casesConfirmed))
-                # contextTmp.append(float(casesDeaths))
-                # contextTmp.append(float(ratio))
-                contextTmp.append(serialNo)
-                contextTmp.append(casesConfirmed)
-                contextTmp.append(casesDeaths)
-                contextTmp.append(ratio)
-                
-                context.append(contextTmp)
-                incremental(2,context[0])
-                # context["confirmedDeaths"] = str(casesDeaths)
-                # context["ratio"] = ratio 
-                timer = time.time() - start
-                print("Non-Incremental Time (for confirm_to_death): ", timer)
-                return render(request,'server_view/confirmtodeath.html', {'data_info':context})
-            else:
-                error = True;    
+    casesConfirmed = 0
+    casesDeaths = 0
+    ratio = 0
+    # if not serialNo:
+    #     print(3)
+    #     error = True
+    #     return render(request,'server_view/confirmtodeath.html',{'error':error,'data_info': context })
+    # else:
+    #     error = False
+    #     if(serialNo == 'None'):
+    #         return render(request,'server_view/confirmtodeath.html')
+    #     ratio = -1; 
+    for line in confList:
+        if (line[0] == month and line[1] == day and line[2] == year and line[3] == state):
+            contextTmp = line
+            context.append(contextTmp)
+            incFinish = time.time() - start
+            print("incremental time (for confirm_to_death): ", incFinish)
+            return render(request,'server_view/confirmtodeath.html', {'data_info':context})
+    for i in range(1, len(caseList) - 1):
+        splitInput = viewsFunctions.split_date(caseList[i][1])
+        if (splitInput[1][0] == '0'):
+            tmpDay = splitInput[1][1]
+        else:
+            tmpDay = splitInput[1]
+
+        if (splitInput[0] == month and splitInput[2] == year and tmpDay == day and caseList[i][2] == state):
+            casesConfirmed = float(caseList[i][5])
+            casesDeaths = float(caseList[i][6])
+            if(casesDeaths == 0):
+                casesDeaths = 1
+            # confirmed / deaths
+            ratio = casesConfirmed / casesDeaths
+
+            # contextTmp.append(serialNo)
+    contextTmp.append(month)
+    contextTmp.append(day)
+    contextTmp.append(year)
+    contextTmp.append(state)
+    contextTmp.append(casesConfirmed)
+    contextTmp.append(casesDeaths)
+    contextTmp.append(ratio)
+    
+    context.append(contextTmp)
+    incremental(2,context[0])
+    # context["confirmedDeaths"] = str(casesDeaths)
+    # context["ratio"] = ratio 
+    timer = time.time() - start
+    print("Non-Incremental Time (for confirm_to_death): ", timer)
+    return render(request,'server_view/confirmtodeath.html', {'data_info':context})
+    
 
     #return render(request,'server_view/confirmtodeath.html',{'error':error,'SN':serialNo })
 
