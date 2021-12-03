@@ -353,9 +353,11 @@ def rec_Rate(request):
     confirmedLow = 0
 
 
-    month = request.POST.get('month')
-    year = request.POST.get('year')
-    state = request.POST.get('location')
+    date = str(request.POST.get('month'))+'-'
+    dateList = date.split('-')
+    year = dateList[0]
+    month = dateList[1]
+    state = request.POST.get('location') #gets province/state
 
     start = time.time()
 
@@ -445,6 +447,15 @@ def caseFatalityRatio(request):
     month = request.POST.get("month")
     day = request.POST.get("day")
     year = request.POST.get("year")
+    # date = str(request.POST.get('date'))+'-'
+    # print(date)
+    # dateList = date.split('-')
+    # year = dateList[0]
+    # print(year)
+    # month = dateList[1]
+    # print(month)
+    # day = dateList[2]
+    # print(day)
     state = request.POST.get('state')
 
     # print(state)
@@ -506,9 +517,12 @@ def daily_cases(request):
 def daily_deaths(request):
     caseList = listClass.list
     #sort the cases of a certain location and month
-    month = request.POST.get('month')
-    year = request.POST.get('year')
+    date = str(request.POST.get('month'))+'-'
+    dateList = date.split('-')
+    year = dateList[0]
+    month = dateList[1]
     location = request.POST.get('location') #gets province/state
+    print(month, year, date,location)
 
     dailyList = viewsFunctions.dailyFunc(month,year,location,caseList,6)
     growth = viewsFunctions.growthRate(dailyList)       
@@ -517,9 +531,12 @@ def daily_deaths(request):
 def daily_recov(request):
     caseList = listClass.list
     #sort the cases of a certain location and month
-    month = request.POST.get('month')
-    year = request.POST.get('year')
+    date = str(request.POST.get('month'))+'-'
+    dateList = date.split('-')
+    year = dateList[0]
+    month = dateList[1]
     location = request.POST.get('location') #gets province/state
+    print(month, year, date,location)
     
     dailyList = viewsFunctions.dailyFunc(month,year,location,caseList,7)
     growth = viewsFunctions.growthRate(dailyList)      
