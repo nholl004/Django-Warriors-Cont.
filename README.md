@@ -5,12 +5,14 @@ cs180project-022-django-data-warriors created by GitHub Classroom
 
 **Instructions:**
 The link provided by Django gives a step by step instruction of how to install the necessary components for Django.
+
 [Django Install Instructions](https://docs.djangoproject.com/en/3.2/topics/install/)
 
 
 **Necessary Technologies: python, Django, Javascript, Html, CSS** 
 
 For more information, he has a YouTube video link that provides a visual description on how to install Django. (Sections 3 and 4 goes over the necessary installations)
+
 [Youtube Visual Refrence](https://youtu.be/F5mRW0jo-U4?t=302) 
 
 **Source Code:** 
