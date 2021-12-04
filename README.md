@@ -12,6 +12,7 @@ For more information, he has a YouTube video link that provides a visual descrip
 [Youtube Visual Refrence](https://youtu.be/F5mRW0jo-U4?t=302) 
 
 **Source Code:** 
+![alt text](https://github.com/ucr-cs180-fall21/cs180project-022-django-data-warriors/tree/main/Images?raw=true)
 The UML diagram below displays the key components of our webpage.
 
 **Templates:**
